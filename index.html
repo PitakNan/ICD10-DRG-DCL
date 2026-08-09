@@ -148,9 +148,15 @@ $('#q').addEventListener('input', e => {
     + `<code>${esc(h.k)}</code> <span class="muted">${h.t==='dc'?'DRG group':'ICD-10'}</span> — ${esc(h.n)}</div>`
   ).join('');
 });
-$('#hits').addEventListener('click', e => {
+// pointerdown (not click): on touch, tapping a hit blurs #q and closes the
+// keyboard *before* the click fires, reflowing the page so mouseup lands on
+// a different element -- the tap silently does nothing. Acting on
+// pointerdown and blocking the default keeps focus/layout stable.
+$('#hits').addEventListener('pointerdown', e => {
   const el = e.target.closest('.hit'); if(!el) return;
-  location.hash = (el.dataset.t==='dc'?'dc/':'code/') + el.dataset.k;
+  e.preventDefault();
+  const hash = (el.dataset.t==='dc'?'dc/':'code/') + el.dataset.k;
+  if(location.hash.slice(1) === hash) route(); else location.hash = hash;
 });
 addEventListener('hashchange', route);
 
