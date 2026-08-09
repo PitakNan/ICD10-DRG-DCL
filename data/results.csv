@@ -1,0 +1,541 @@
+code,pdc,mdc,echo_pdx,drg,drgname,status
+A33,,15,A33,26509,Ungroupable,ok
+P523,,15,P523,26509,Ungroupable,ok
+Z388,,15,Z388,26509,Ungroupable,ok
+A187,10A,10,A187,10500,Endocrine disorders except diabetes wo complicated PDx wo sig CCC,ok
+E209,10A,10,E209,10500,Endocrine disorders except diabetes wo complicated PDx wo sig CCC,ok
+R948,10A,10,R948,10500,Endocrine disorders except diabetes wo complicated PDx wo sig CCC,ok
+E40,10B,10,E40,10519,Severe metabolic disorder in adult,ok
+E441,10B,10,E441,10519,Severe metabolic disorder in adult,ok
+E640,10B,10,E640,10519,Severe metabolic disorder in adult,ok
+E15,10C,10,E15,10530,Nutrition and miscelaneous metabolic disorders wo sig CCC,ok
+E648,10C,10,E648,10530,Nutrition and miscelaneous metabolic disorders wo sig CCC,ok
+R824,10C,10,R824,10530,Nutrition and miscelaneous metabolic disorders wo sig CCC,ok
+D813,10D,10,D813,10540,Inborn errors of metabolism wo sig CCC,ok
+E769,10D,10,E769,10540,Inborn errors of metabolism wo sig CCC,ok
+E889,10D,10,E889,10540,Inborn errors of metabolism wo sig CCC,ok
+E109,10F,10,E109,10560,Diabetes without complicated PDx wo sig CCC,ok
+E129,10F,10,E129,10560,Diabetes without complicated PDx wo sig CCC,ok
+E149,10F,10,E149,10560,Diabetes without complicated PDx wo sig CCC,ok
+C73,10G,10,C73,10610,Endocrine malignancy wo sig CCC,ok
+C750,10G,10,C750,10610,Endocrine malignancy wo sig CCC,ok
+C797,10G,10,C797,10610,Endocrine malignancy wo sig CCC,ok
+I120,11A,11,I120,11500,"Chronic renal failure, age > 17 wo sig CCC",ok
+N183,11A,11,N183,11500,"Chronic renal failure, age > 17 wo sig CCC",ok
+N19,11A,11,N19,11500,"Chronic renal failure, age > 17 wo sig CCC",ok
+Z490,11B,11,Z490,11520,Admit for renal dialysis wo sig CCC,ok
+Z491,11B,11,Z491,11520,Admit for renal dialysis wo sig CCC,ok
+Z492,11B,11,Z492,11520,Admit for renal dialysis wo sig CCC,ok
+C64,11C,11,C64,11530,Kidney and urinary tract neoplasm wo sig CCC,ok
+C790,11C,11,C790,11530,Kidney and urinary tract neoplasm wo sig CCC,ok
+D419,11C,11,D419,11530,Kidney and urinary tract neoplasm wo sig CCC,ok
+A181,11D,11,A181,11540,Kidney and urinary tract infection wo sig CCC,ok
+N151,11D,11,N151,11541,Kidney and urinary tract infection w min CCC,ok
+T835,11D,11,T835,11540,Kidney and urinary tract infection wo sig CCC,ok
+N130,11E,11,N130,11550,Urinary stone wo sig CCC,ok
+N202,11E,11,N202,11550,Urinary stone wo sig CCC,ok
+N23,11E,11,N23,11550,Urinary stone wo sig CCC,ok
+E877,11F,11,E877,11560,Kidney and urinary tract signs & symptoms wo sig CCC,ok
+R36,11F,11,R36,11560,Kidney and urinary tract signs & symptoms wo sig CCC,ok
+R944,11F,11,R944,11560,Kidney and urinary tract signs & symptoms wo sig CCC,ok
+N350,11G,11,N350,11570,Urethral stricture wo sig CCC,ok
+N358,11G,11,N358,11570,Urethral stricture wo sig CCC,ok
+N991,11G,11,N991,11570,Urethral stricture wo sig CCC,ok
+E102,11H,11,E102,11580,Other kidney and urinary tract diagnoses wo sig CCC,ok
+N0591,11H,11,N0591,11580,Other kidney and urinary tract diagnoses wo sig CCC,ok
+Z960,11H,11,Z960,11580,Other kidney and urinary tract diagnoses wo sig CCC,ok
+N170,11J,11,N170,11590,"Acute renal failure age > 17, not transferred wo sig CCC",ok
+N172,11J,11,N172,11590,"Acute renal failure age > 17, not transferred wo sig CCC",ok
+N179,11J,11,N179,11590,"Acute renal failure age > 17, not transferred wo sig CCC",ok
+I701,11K,11,I701,11660,Major kidney diagnoses wo sig CCC,ok
+N0342,11K,11,N0342,11660,Major kidney diagnoses wo sig CCC,ok
+T861,11K,11,T861,11660,Major kidney diagnoses wo sig CCC,ok
+C600,12A,12,C600,12500,"Malignancy, male reproductive system wo sig CCC",ok
+C632,12A,12,C632,12500,"Malignancy, male reproductive system wo sig CCC",ok
+D409,12A,12,D409,12500,"Malignancy, male reproductive system wo sig CCC",ok
+N40,12B,12,N40,12510,Benign prostatic hypertrophy wo sig CCC,ok
+A510,12C,12,A510,12520,Inflammation of the male reproductive system wo sig CCC,ok
+B374,12C,12,B374,12520,Inflammation of the male reproductive system wo sig CCC,ok
+N499,12C,12,N499,12520,Inflammation of the male reproductive system wo sig CCC,ok
+D176,12E,12,D176,12540,Other male reproductive system diagnoses wo sig CCC,ok
+Q550,12E,12,Q550,12540,Other male reproductive system diagnoses wo sig CCC,ok
+Z310,12E,12,Z310,12540,Other male reproductive system diagnoses wo sig CCC,ok
+C510,13A,13,C510,26509,Ungroupable,ok
+C543,13A,13,C543,26509,Ungroupable,ok
+D399,13A,13,D399,26509,Ungroupable,ok
+D060,13B,13,D060,26509,Ungroupable,ok
+D070,13B,13,D070,26509,Ungroupable,ok
+D073,13B,13,D073,13510,Non-ovarian/adnexal ca in situ wo sig CCC,ok
+C56,13C,13,C56,13520,Ovarian/adnexal malignancy wo sig CCC,ok
+C573,13C,13,C573,26509,Ungroupable,ok
+D391,13C,13,D391,13520,Ovarian/adnexal malignancy wo sig CCC,ok
+A510,13D,13,A510,12520,Inflammation of the male reproductive system wo sig CCC,ok
+B373,13D,13,B373,26509,Ungroupable,ok
+N898,13D,13,N898,26509,Ungroupable,ok
+A542,13E,13,A542,12520,Inflammation of the male reproductive system wo sig CCC,ok
+N719,13E,13,N719,26509,Ungroupable,ok
+N980,13E,13,N980,26509,Ungroupable,ok
+D250,13F,13,D250,26509,Ungroupable,ok
+N921,13F,13,N921,26509,Ungroupable,ok
+Z437,13F,13,Z437,26509,Ungroupable,ok
+O151,14A,14,O151,26509,Ungroupable,ok
+O702,14A,14,O702,26509,Ungroupable,ok
+O849,14A,14,O849,26509,Ungroupable,ok
+O100,14B,14,O100,26509,Ungroupable,ok
+O330,14B,14,O330,26509,Ungroupable,ok
+O998,14B,14,O998,26509,Ungroupable,ok
+A34,14C,14,A34,26509,Ungroupable,ok
+O892,14C,14,O892,26509,Ungroupable,ok
+O927,14C,14,O927,26509,Ungroupable,ok
+O080,14D,14,O080,26509,Ungroupable,ok
+O086,14D,14,O086,26509,Ungroupable,ok
+Z391,14D,14,Z391,26509,Ungroupable,ok
+O280,14E,14,O280,26509,Ungroupable,ok
+O600,14E,14,O600,26509,Ungroupable,ok
+Z369,14E,14,Z369,26509,Ungroupable,ok
+O000,14F,14,O000,26509,Ungroupable,ok
+O002,14F,14,O002,26509,Ungroupable,ok
+O009,14F,14,O009,26509,Ungroupable,ok
+O200,14G,14,O200,26509,Ungroupable,ok
+O208,14G,14,O208,26509,Ungroupable,ok
+O209,14G,14,O209,26509,Ungroupable,ok
+O020,14H,14,O020,26509,Ungroupable,ok
+O053,14H,14,O053,26509,Ungroupable,ok
+O079,14H,14,O079,26509,Ungroupable,ok
+O470,14J,14,O470,26509,Ungroupable,ok
+O471,14J,14,O471,26509,Ungroupable,ok
+O479,14J,14,O479,26509,Ungroupable,ok
+O021,14K,14,O021,26509,Ungroupable,ok
+O052,14K,14,O052,26509,Ungroupable,ok
+O077,14K,14,O077,26509,Ungroupable,ok
+O010,14L,14,O010,26509,Ungroupable,ok
+O011,14L,14,O011,26509,Ungroupable,ok
+O019,14L,14,O019,26509,Ungroupable,ok
+D460,16A,16,D460,16501,Red blood cell disorders w min CCC,ok
+D578,16A,16,D578,16500,Red blood cell disorders wo sig CCC,ok
+T809,16A,16,T809,16500,Red blood cell disorders wo sig CCC,ok
+D65,16B,16,D65,16510,Coagulation disorders wo sig CCC,ok
+D689,16B,16,D689,16510,Coagulation disorders wo sig CCC,ok
+R233,16B,16,R233,16510,Coagulation disorders wo sig CCC,ok
+D472,16C,16,D472,16520,Reticuloendothelial and immuno disorders wo sig CCC,ok
+D818,16C,16,D818,16520,Reticuloendothelial and immuno disorders wo sig CCC,ok
+T860,16C,16,T860,16521,Reticuloendothelial and immuno disorders w min CCC,ok
+C910,17A,17,C910,17500,Acute leukemia wo sig CCC,ok
+C925,17A,17,C925,17500,Acute leukemia wo sig CCC,ok
+C950,17A,17,C950,17500,Acute leukemia wo sig CCC,ok
+C261,17B,17,C261,17510,Lymphoma & non-acute leukemia wo sig CCC,ok
+C883,17B,17,C883,17510,Lymphoma & non-acute leukemia wo sig CCC,ok
+D891,17B,17,D891,17510,Lymphoma & non-acute leukemia wo sig CCC,ok
+C480,17C,17,C480,17521,Other Neoplastic disorders w min CCC,ok
+D1807,17C,17,D1807,17520,Other Neoplastic disorders wo sig CCC,ok
+Z031,17C,17,Z031,17520,Other Neoplastic disorders wo sig CCC,ok
+A021,18A,18,A021,18500,"Septicemia, adult, not transferred wo sig CCC",ok
+A410,18A,18,A410,18500,"Septicemia, adult, not transferred wo sig CCC",ok
+R578,18A,18,R578,18500,"Septicemia, adult, not transferred wo sig CCC",ok
+T793,18B,18,T793,18520,"Postop and post-traumatic infections, elderly wo sig CCC",ok
+T814,18B,18,T814,18520,"Postop and post-traumatic infections, elderly wo sig CCC",ok
+B500,18C,18,B500,18540,"Malaria, adult wo sig CCC",ok
+B520,18C,18,B520,18540,"Malaria, adult wo sig CCC",ok
+B54,18C,18,B54,18540,"Malaria, adult wo sig CCC",ok
+A90,18D,18,A90,18560,"Dengue, adult wo sig CCC",ok
+A919,18D,18,A919,18560,"Dengue, adult wo sig CCC",ok
+A979,18D,18,A979,18560,"Dengue, adult wo sig CCC",ok
+R508,18E,18,R508,18580,"Fever of unknow origin, adult wo sig CCC",ok
+R509,18E,18,R509,18580,"Fever of unknow origin, adult wo sig CCC",ok
+A804,18F,18,A804,18600,"Viral illness except dengue, adult wo sig CCC",ok
+B03,18F,18,B03,18600,"Viral illness except dengue, adult wo sig CCC",ok
+Z21,18F,18,Z21,18600,"Viral illness except dengue, adult wo sig CCC",ok
+B377,18G,18,B377,18620,"Fungal diseases, adult wo sig CCC",ok
+B442,18G,18,B442,18620,"Fungal diseases, adult wo sig CCC",ok
+B49,18G,18,B49,18620,"Fungal diseases, adult wo sig CCC",ok
+A010,18H,18,A010,18640,"Other infectious and parasitic diseases, adult wo sig CCC",ok
+A530,18H,18,A530,18640,"Other infectious and parasitic diseases, adult wo sig CCC",ok
+T880,18H,18,T880,18640,"Other infectious and parasitic diseases, adult wo sig CCC",ok
+A241,18J,18,A241,18660,"Melioidosis, adult wo sig CCC",ok
+A243,18J,18,A243,18660,"Melioidosis, adult wo sig CCC",ok
+A244,18J,18,A244,18660,"Melioidosis, adult wo sig CCC",ok
+A270,18K,18,A270,18680,"Leptospirosis, adult wo sig CCC",ok
+A278,18K,18,A278,18680,"Leptospirosis, adult wo sig CCC",ok
+A279,18K,18,A279,18680,"Leptospirosis, adult wo sig CCC",ok
+F230,19A,19,F230,19502,Acute psychotic disorders w mod CCC,ok
+F315,19A,19,F315,19502,Acute psychotic disorders w mod CCC,ok
+F538,19A,19,F538,26509,Ungroupable,ok
+F200,19B,19,F200,19512,Chronic psychotic disorders w mod CCC,ok
+F2050,19B,19,F2050,19511,Chronic psychotic disorders w min CCC,ok
+F29,19B,19,F29,19510,Chronic psychotic disorders wo sig CCC,ok
+F300,19C,19,F300,19520,Major affective disorders wo sig CCC,ok
+F328,19C,19,F328,19520,Major affective disorders wo sig CCC,ok
+F539,19C,19,F539,26509,Ungroupable,ok
+F340,19D,19,F340,19530,Other affect and somatoform disorders wo sig CCC,ok
+F4539,19D,19,F4539,19530,Other affect and somatoform disorders wo sig CCC,ok
+F59,19D,19,F59,19530,Other affect and somatoform disorders wo sig CCC,ok
+F430,19E,19,F430,19549,Acute reaction and psychosocial dysfunction,ok
+F4323,19E,19,F4323,19549,Acute reaction and psychosocial dysfunction,ok
+F439,19E,19,F439,19549,Acute reaction and psychosocial dysfunction,ok
+F400,19F,19,F400,19550,Anxiety disorders wo sig CCC,ok
+F447,19F,19,F447,19551,Anxiety disorders w min CCC,ok
+G479,19F,19,G479,19550,Anxiety disorders wo sig CCC,ok
+F420,19G,19,F420,19569,Eating and obscessive compulsive disorders,ok
+F501,19G,19,F501,19569,Eating and obscessive compulsive disorders,ok
+F509,19G,19,F509,19569,Eating and obscessive compulsive disorders,ok
+F520,19H,19,F520,19579,Person & impulse control disorders and sexual dysfunt,ok
+F629,19H,19,F629,19579,Person & impulse control disorders and sexual dysfunt,ok
+F69,19H,19,F69,19579,Person & impulse control disorders and sexual dysfunt,ok
+F4482,19J,19,F4482,19581,Childhood mental disorders w min CCC,ok
+F908,19J,19,F908,19580,Childhood mental disorders wo sig CCC,ok
+F989,19J,19,F989,19580,Childhood mental disorders wo sig CCC,ok
+F010,19K,19,F010,19590,Organic disturbance wo sig CCC,ok
+F0193,19K,19,F0193,19590,Organic disturbance wo sig CCC,ok
+R418,19K,19,R418,19590,Organic disturbance wo sig CCC,ok
+F54,19L,19,F54,19600,Other mental disorders wo sig CCC,ok
+R457,19L,19,R457,19600,Other mental disorders wo sig CCC,ok
+Z728,19L,19,Z728,19600,Other mental disorders wo sig CCC,ok
+F700,19N,19,F700,19620,Mental retardation wo sig CCC,ok
+F798,19N,19,F798,19620,Mental retardation wo sig CCC,ok
+Q939,19N,19,Q939,19620,Mental retardation wo sig CCC,ok
+G041,1A,01,G041,01500,Spinal disorders (non-traumatic,ok
+G823,1A,01,G823,01500,Spinal disorders (non-traumatic,ok
+G835,1A,01,G835,01500,Spinal disorders (non-traumatic,ok
+G800,1B,01,G800,01510,Cerebral palsy wo sig CCC,ok
+G803,1B,01,G803,01510,Cerebral palsy wo sig CCC,ok
+G809,1B,01,G809,01510,Cerebral palsy wo sig CCC,ok
+B431,1C,01,B431,01520,Nervous system neoplasms wo sig CCC,ok
+D320,1C,01,D320,01520,Nervous system neoplasms wo sig CCC,ok
+D447,1C,01,D447,01520,Nervous system neoplasms wo sig CCC,ok
+A521,1D,01,A521,01530,Degenerative  nervous system disorders wo sig CCC,ok
+G248,1D,01,G248,01530,Degenerative  nervous system disorders wo sig CCC,ok
+I698,1D,01,I698,01530,Degenerative  nervous system disorders wo sig CCC,ok
+G110,1E,01,G110,01540,Multiple sclerosis and cerebellar ataxia wo sig CCC,ok
+G368,1E,01,G368,01540,Multiple sclerosis and cerebellar ataxia wo sig CCC,ok
+G379,1E,01,G379,01540,Multiple sclerosis and cerebellar ataxia wo sig CCC,ok
+I600,1F,01,I600,01551,Specific cerebrovascular disorders exc TIA w min CCC,ok
+I619,1F,01,I619,01550,Specific cerebrovascular disorders exc TIA wo sig CCC,ok
+I677,1F,01,I677,01551,Specific cerebrovascular disorders exc TIA w min CCC,ok
+G450,1G,01,G450,01560,TIA and precerebral occlusions wo sig CCC,ok
+I653,1G,01,I653,01560,TIA and precerebral occlusions wo sig CCC,ok
+I669,1G,01,I669,01560,TIA and precerebral occlusions wo sig CCC,ok
+G934,1H,01,G934,01570,Nonspecific cerebrovascular disorders wo sig CCC,ok
+G98,1H,01,G98,01570,Nonspecific cerebrovascular disorders wo sig CCC,ok
+I679,1H,01,I679,01570,Nonspecific cerebrovascular disorders wo sig CCC,ok
+E104,1J,01,E104,01580,Cranial and peripheral nerve disorders wo sig CCC,ok
+M5413,1J,01,M5413,01580,Cranial and peripheral nerve disorders wo sig CCC,ok
+T144,1J,01,T144,01580,Cranial and peripheral nerve disorders wo sig CCC,ok
+A066,1K,01,A066,01590,"Nerv syst infection exc viral meningitis, not transfer wo sig CCC",ok
+A89,1K,01,A89,01590,"Nerv syst infection exc viral meningitis, not transfer wo sig CCC",ok
+G062,1K,01,G062,01590,"Nerv syst infection exc viral meningitis, not transfer wo sig CCC",ok
+A870,1L,01,A870,01600,Viral meningitis wo sig CCC,ok
+B003,1L,01,B003,01600,Viral meningitis wo sig CCC,ok
+G032,1L,01,G032,01600,Viral meningitis wo sig CCC,ok
+G935,1M,01,G935,01611,Nontraumatic stupor and coma w min CCC,ok
+R401,1M,01,R401,01610,Nontraumatic stupor and coma wo sig CCC,ok
+R409,1M,01,R409,01610,Nontraumatic stupor and coma wo sig CCC,ok
+R560,1N,01,R560,01620,Febrile convulsions wo sig CCC,ok
+G253,1P,01,G253,01630,Seizure disorders wo sig CCC,ok
+G407,1P,01,G407,01630,Seizure disorders wo sig CCC,ok
+R568,1P,01,R568,01630,Seizure disorders wo sig CCC,ok
+F072,1Q,01,F072,01641,Headache w min CCC,ok
+G442,1Q,01,G442,01640,Headache wo sig CCC,ok
+R511,1Q,01,R511,01640,Headache wo sig CCC,ok
+S061,1R,01,S061,01650,Intracranial injury wo sig CCC,ok
+S0651,1R,01,S0651,01650,Intracranial injury wo sig CCC,ok
+T060,1R,01,T060,01650,Intracranial injury wo sig CCC,ok
+S020,1S,01,S020,01660,Skull fractures wo sig CCC,ok
+S028,1S,01,S028,01660,Skull fractures wo sig CCC,ok
+T0201,1S,01,T0201,01660,Skull fractures wo sig CCC,ok
+S060,1T,01,S060,01670,Other head injury wo sig CCC,ok
+S0601,1T,01,S0601,01670,Other head injury wo sig CCC,ok
+S099,1T,01,S099,01670,Other head injury wo sig CCC,ok
+A881,1U,01,A881,01680,Other disorders of nervous system wo sig CCC,ok
+Q019,1U,01,Q019,01680,Other disorders of nervous system wo sig CCC,ok
+Z900,1U,01,Z900,01680,Other disorders of nervous system wo sig CCC,ok
+G610,1V,01,G610,01690,Guillain-Barre syndrome wo sig CCC,ok
+S140,1W,01,S140,01770,Spinal injuries wo sig CCC,ok
+S340,1W,01,S340,01770,Spinal injuries wo sig CCC,ok
+T093,1W,01,T093,01770,Spinal injuries wo sig CCC,ok
+F100,20A,20,F100,20500,Alcohol intoxication and withdrawal wo sig CCC,ok
+F1050,20A,20,F1050,20502,Alcohol intoxication and withdrawal w mod CCC,ok
+Z502,20A,20,Z502,20501,Alcohol intoxication and withdrawal w min CCC,ok
+F113,20B,20,F113,20510,Drug use disorders and withdrawal wo sig CCC,ok
+F1555,20B,20,F1555,20511,Drug use disorders and withdrawal w min CCC,ok
+Z503,20B,20,Z503,20511,Drug use disorders and withdrawal w min CCC,ok
+F101,20C,20,F101,20520,Alcohol use disorders and dependence wo sig CCC,ok
+F1023,20C,20,F1023,20520,Alcohol use disorders and dependence wo sig CCC,ok
+F106,20C,20,F106,20520,Alcohol use disorders and dependence wo sig CCC,ok
+F110,20D,20,F110,20539,Opioid use disorders and dependence,ok
+F111,20D,20,F111,20539,Opioid use disorders and dependence,ok
+F1126,20D,20,F1126,20539,Opioid use disorders and dependence,ok
+F120,20E,20,F120,20541,Oth drug use disorders and dependence and intoxication w min CCC,ok
+F1604,20E,20,F1604,20540,Oth drug use disorders and dependence and intoxication wo sig CCC,ok
+F559,20E,20,F559,20540,Oth drug use disorders and dependence and intoxication wo sig CCC,ok
+S010,21A,21,S010,21500,Traumatic injury age >17 wo sig CCC,ok
+S680,21A,21,S680,21501,Traumatic injury age >17 w min CCC,ok
+T148,21A,21,T148,21500,Traumatic injury age >17 wo sig CCC,ok
+T780,21B,21,T780,21520,Allergic reactions age >17 wo sig CCC,ok
+T784,21B,21,T784,21520,Allergic reactions age >17 wo sig CCC,ok
+T886,21B,21,T886,21521,Allergic reactions age >17 w min CCC,ok
+R502,21C,21,R502,21540,Poisoning & toxic effects of drugs age >17 wo sig CCC,ok
+T490,21C,21,T490,21540,Poisoning & toxic effects of drugs age >17 wo sig CCC,ok
+T887,21C,21,T887,21540,Poisoning & toxic effects of drugs age >17 wo sig CCC,ok
+H959,21D,21,H959,21560,Complications of treatment wo sig CCC,ok
+T818,21D,21,T818,21560,Complications of treatment wo sig CCC,ok
+T888,21D,21,T888,21560,Complications of treatment wo sig CCC,ok
+T330,21E,21,T330,21570,"Other injury, poisoning & toxic effect diag wo sig CCC",ok
+T679,21E,21,T679,21570,"Other injury, poisoning & toxic effect diag wo sig CCC",ok
+Z045,21E,21,Z045,21570,"Other injury, poisoning & toxic effect diag wo sig CCC",ok
+T312,22A,22,T312,22500,Extensive burns wo debridement wo sig CCC,ok
+T322,22A,22,T322,22500,Extensive burns wo debridement wo sig CCC,ok
+T329,22A,22,T329,22500,Extensive burns wo debridement wo sig CCC,ok
+T203,22B,22,T203,22510,Full thickness burns wo skin graft/inh inj wo sig CCC,ok
+T247,22B,22,T247,22510,Full thickness burns wo skin graft/inh inj wo sig CCC,ok
+T321,22B,22,T321,22510,Full thickness burns wo skin graft/inh inj wo sig CCC,ok
+T200,22C,22,T200,22520,Non-extensive burns wo sig CCC,ok
+T242,22C,22,T242,22520,Non-extensive burns wo sig CCC,ok
+T320,22C,22,T320,22520,Non-extensive burns wo sig CCC,ok
+Z440,23A,23,Z440,23500,Rehabilitation wo sig CCC,ok
+Z507,23A,23,Z507,23500,Rehabilitation wo sig CCC,ok
+Z740,23A,23,Z740,23500,Rehabilitation wo sig CCC,ok
+G933,23B,23,G933,23510,"Signs, symptoms and other abnormal findings wo sig CCC",ok
+R832,23B,23,R832,23510,"Signs, symptoms and other abnormal findings wo sig CCC",ok
+R938,23B,23,R938,23510,"Signs, symptoms and other abnormal findings wo sig CCC",ok
+Z080,23C,23,Z080,23520,Aftercare wo sig CCC,ok
+Z091,23C,23,Z091,23520,Aftercare wo sig CCC,ok
+Z099,23C,23,Z099,23520,Aftercare wo sig CCC,ok
+E344,23D,23,E344,23530,"Oth factors influencing health status, in the elderly wo sig CCC",ok
+Z408,23D,23,Z408,23530,"Oth factors influencing health status, in the elderly wo sig CCC",ok
+Z975,23D,23,Z975,26509,Ungroupable,ok
+B200,25A,25,B200,25520,"HIV-related infection, not transferred wo sig CCC",ok
+B217,25A,25,B217,25510,HIV-related malignancy wo sig CCC,ok
+O987,25A,25,O987,26509,Ungroupable,ok
+A185,2A,02,A185,02510,Acute and major eye infections age > 54 wo sig CCC,ok
+B023,2A,02,B023,02510,Acute and major eye infections age > 54 wo sig CCC,ok
+H441,2A,02,H441,02510,Acute and major eye infections age > 54 wo sig CCC,ok
+G245,2B,02,G245,02530,Neurological and vasc disor of the eye wo sig CCC,ok
+H493,2B,02,H493,02530,Neurological and vasc disor of the eye wo sig CCC,ok
+H570,2B,02,H570,02530,Neurological and vasc disor of the eye wo sig CCC,ok
+H055,2C,02,H055,02500,Hyphema and medically managed trauma wo sig CCC,ok
+H447,2C,02,H447,02500,Hyphema and medically managed trauma wo sig CCC,ok
+T852,2C,02,T852,02500,Hyphema and medically managed trauma wo sig CCC,ok
+A740,2D,02,A740,02540,Other disorders of the eye wo sig CCC,ok
+H301,2D,02,H301,02541,Other disorders of the eye w min CCC,ok
+T853,2D,02,T853,02540,Other disorders of the eye wo sig CCC,ok
+C431,2E,02,C431,02550,Malignant neoplasm of the eye wo sig CCC,ok
+C695,2E,02,C695,02550,Malignant neoplasm of the eye wo sig CCC,ok
+D092,2E,02,D092,02550,Malignant neoplasm of the eye wo sig CCC,ok
+C000,3A,03,C000,03500,"Ear, nose, mouth and throat malignancy wo sig CCC",ok
+C090,3A,03,C090,03500,"Ear, nose, mouth and throat malignancy wo sig CCC",ok
+D380,3A,03,D380,03500,"Ear, nose, mouth and throat malignancy wo sig CCC",ok
+A186,3B,03,A186,03510,Ear diseses and balance wo sig CCC,ok
+H812,3B,03,H812,03511,Ear diseses and balance w min CCC,ok
+T700,3B,03,T700,03510,Ear diseses and balance wo sig CCC,ok
+A360,3C,03,A360,03521,"Nose, mouth, throat and larynx diseases w min CCC",ok
+K1161,3C,03,K1161,03520,"Nose, mouth, throat and larynx diseases wo sig CCC",ok
+T701,3C,03,T701,03520,"Nose, mouth, throat and larynx diseases wo sig CCC",ok
+K000,3H,03,K000,03570,"Dental, oral and jaw disorders wo sig CCC",ok
+K071,3H,03,K071,03570,"Dental, oral and jaw disorders wo sig CCC",ok
+S034,3H,03,S034,03570,"Dental, oral and jaw disorders wo sig CCC",ok
+I260,4B,04,I260,04510,Pulmonary embolism wo sig CCC,ok
+T790,4B,04,T790,04510,Pulmonary embolism wo sig CCC,ok
+T800,4B,04,T800,04510,Pulmonary embolism wo sig CCC,ok
+A065,4C,04,A065,04520,Respiratory infection/inflammation wo sig CCC,ok
+B485,4C,04,B485,04520,Respiratory infection/inflammation wo sig CCC,ok
+U109,4C,04,U109,04520,Respiratory infection/inflammation wo sig CCC,ok
+G473,4D,04,G473,04530,Sleep apnea wo sig CCC,ok
+J681,4E,04,J681,04540,"Pulmonary edema and resp failure, not transferred wo sig CCC",ok
+J9609,4E,04,J9609,04540,"Pulmonary edema and resp failure, not transferred wo sig CCC",ok
+J9699,4E,04,J9699,04540,"Pulmonary edema and resp failure, not transferred wo sig CCC",ok
+J411,4F,04,J411,04550,Chronic obstructive pulmonary disease wo sig CCC,ok
+J440,4F,04,J440,04550,Chronic obstructive pulmonary disease wo sig CCC,ok
+Q334,4F,04,Q334,04550,Chronic obstructive pulmonary disease wo sig CCC,ok
+S222,4G,04,S222,04560,Major chest trauma wo sig CCC,ok
+S2281,4G,04,S2281,04560,Major chest trauma wo sig CCC,ok
+S432,4G,04,S432,04560,Major chest trauma wo sig CCC,ok
+R042,4H,04,R042,04570,Respiratory signs and symptoms wo sig CCC,ok
+R064,4H,04,R064,04570,Respiratory signs and symptoms wo sig CCC,ok
+R91,4H,04,R91,04570,Respiratory signs and symptoms wo sig CCC,ok
+J930,4J,04,J930,04580,Pneumothorax wo sig CCC,ok
+S2701,4J,04,S2701,04580,Pneumothorax wo sig CCC,ok
+T797,4J,04,T797,04580,Pneumothorax wo sig CCC,ok
+A370,4K,04,A370,04591,Bronchitis and asthma and whooping cough w min CCC,ok
+J209,4K,04,J209,04590,Bronchitis and asthma and whooping cough wo sig CCC,ok
+J980,4K,04,J980,04590,Bronchitis and asthma and whooping cough wo sig CCC,ok
+C33,4M,04,C33,04610,Respiratory neoplasms wo sig CCC,ok
+C783,4M,04,C783,04610,Respiratory neoplasms wo sig CCC,ok
+R846,4M,04,R846,04610,Respiratory neoplasms wo sig CCC,ok
+B330,4N,04,B330,04620,"Pleural effusion, not transferred wo sig CCC",ok
+J941,4N,04,J941,04620,"Pleural effusion, not transferred wo sig CCC",ok
+R091,4N,04,R091,04620,"Pleural effusion, not transferred wo sig CCC",ok
+B909,4P,04,B909,04630,Interstitial lung disease wo sig CCC,ok-reset
+J671,4P,04,J671,04630,Interstitial lung disease wo sig CCC,ok
+M0519,4P,04,M0519,26509,Ungroupable,ok
+E320,4Q,04,E320,04640,Other respiratory system diagnoses wo sig CCC,ok
+Q766,4Q,04,Q766,04640,Other respiratory system diagnoses wo sig CCC,ok
+Z902,4Q,04,Z902,04640,Other respiratory system diagnoses wo sig CCC,ok
+J860,4R,04,J860,04700,Pyothorax wo sig CCC,ok
+J869,4R,04,J869,04700,Pyothorax wo sig CCC,ok
+I210,5A,05,I210,05530,"Acute MI, not transferred wo sig CCC",ok
+I219,5A,05,I219,05530,"Acute MI, not transferred wo sig CCC",ok
+I229,5A,05,I229,05530,"Acute MI, not transferred wo sig CCC",ok
+B376,5B,05,B376,05540,Infective endocarditis wo sig CCC,ok
+I330,5B,05,I330,05540,Infective endocarditis wo sig CCC,ok
+I339,5B,05,I339,05540,Infective endocarditis wo sig CCC,ok
+I110,5C,05,I110,05550,Heart failure and shock wo sig CCC,ok
+I501,5C,05,I501,05550,Heart failure and shock wo sig CCC,ok
+R579,5C,05,R579,05550,Heart failure and shock wo sig CCC,ok
+I800,5D,05,I800,05560,Venous thrombosis wo sig CCC,ok
+I808,5D,05,I808,05560,Venous thrombosis wo sig CCC,ok
+I829,5D,05,I829,05560,Venous thrombosis wo sig CCC,ok
+I830,5E,05,I830,05579,Skin ulcers for circulatory disorders,ok
+I832,5E,05,I832,05579,Skin ulcers for circulatory disorders,ok
+E105,5F,05,E105,05580,"Peripheral vascular disorders, not transferred wo sig CCC",ok
+I729,5F,05,I729,05580,"Peripheral vascular disorders, not transferred wo sig CCC",ok
+T817,5F,05,T817,05580,"Peripheral vascular disorders, not transferred wo sig CCC",ok
+I200,5G,05,I200,05590,Coronary atherosclerosis and unstable angina wo sig CCC,ok
+I256,5G,05,I256,05590,Coronary atherosclerosis and unstable angina wo sig CCC,ok
+R931,5G,05,R931,05590,Coronary atherosclerosis and unstable angina wo sig CCC,ok
+I10,5H,05,I10,05600,Hypertension wo sig CCC,ok
+I151,5H,05,I151,05600,Hypertension wo sig CCC,ok
+I674,5H,05,I674,05600,Hypertension wo sig CCC,ok
+Q200,5J,05,Q200,05610,Congenital heart disease wo sig CCC,ok
+Q234,5J,05,Q234,05610,Congenital heart disease wo sig CCC,ok
+Q874,5J,05,Q874,05610,Congenital heart disease wo sig CCC,ok
+I011,5K,05,I011,05620,Valvular disorders wo sig CCC,ok
+I341,5K,05,I341,05620,Valvular disorders wo sig CCC,ok
+T821,5K,05,T821,05620,Valvular disorders wo sig CCC,ok
+I441,5L,05,I441,05630,Major arrhythmia and cardiac arrest wo sig CCC,ok
+I472,5L,05,I472,05630,Major arrhythmia and cardiac arrest wo sig CCC,ok
+R962,5L,05,R962,05630,Major arrhythmia and cardiac arrest wo sig CCC,ok
+I440,5M,05,I440,05640,Non-major arrhythmia and conduction dis wo sig CCC,ok
+I480,5M,05,I480,05640,Non-major arrhythmia and conduction dis wo sig CCC,ok
+R002,5M,05,R002,05640,Non-major arrhythmia and conduction dis wo sig CCC,ok
+I951,5P,05,I951,05660,"Chest pain, syncope and collapse wo sig CCC",ok
+R074,5P,05,R074,05660,"Chest pain, syncope and collapse wo sig CCC",ok
+Z035,5P,05,Z035,05660,"Chest pain, syncope and collapse wo sig CCC",ok
+A395,5R,05,A395,05680,Other circulatory system diagnoses wo sig CCC,ok
+I420,5R,05,I420,05680,Other circulatory system diagnoses wo sig CCC,ok
+Z450,5R,05,Z450,05680,Other circulatory system diagnoses wo sig CCC,ok
+C150,6A,06,C150,06500,"Digestive malignancy, not transferred wo sig CCC",ok
+C20,6A,06,C20,06500,"Digestive malignancy, not transferred wo sig CCC",ok
+D484,6A,06,D484,06500,"Digestive malignancy, not transferred wo sig CCC",ok
+I850,6C,06,I850,06511,Complicated peptic ulce and GI hemorrhage w min CCC,ok
+K275,6C,06,K275,06510,Complicated peptic ulce and GI hemorrhage wo sig CCC,ok
+Q430,6C,06,Q430,06510,Complicated peptic ulce and GI hemorrhage wo sig CCC,ok
+K253,6D,06,K253,06540,Uncomplicated peptic ulcer wo sig CCC,ok
+K267,6D,06,K267,06540,Uncomplicated peptic ulcer wo sig CCC,ok
+K279,6D,06,K279,06540,Uncomplicated peptic ulcer wo sig CCC,ok
+K500,6E,06,K500,06559,Inflammatory bowel disease,ok
+K512,6E,06,K512,06559,Inflammatory bowel disease,ok
+K519,6E,06,K519,06559,Inflammatory bowel disease,ok
+K561,6F,06,K561,06560,"GI obstruction, not transferred wo sig CCC",ok
+K564,6F,06,K564,06560,"GI obstruction, not transferred wo sig CCC",ok
+Q433,6F,06,Q433,06560,"GI obstruction, not transferred wo sig CCC",ok
+A000,6G,06,A000,06581,Gastroenteritis age < 10 w min CCC,ok
+A052,6G,06,A052,06580,Gastroenteritis age < 10 wo sig CCC,ok
+A099,6G,06,A099,06580,Gastroenteritis age < 10 wo sig CCC,ok
+B378,6H,06,B378,06630,Intestinal helminth and misc digestive dis age < 10 wo sig CCC,ok
+K582,6H,06,K582,06630,Intestinal helminth and misc digestive dis age < 10 wo sig CCC,ok
+R935,6H,06,R935,06630,Intestinal helminth and misc digestive dis age < 10 wo sig CCC,ok
+D120,6J,06,D120,06600,"Other digestive system diagnoses, not transferred wo sig CCC",ok
+K635,6J,06,K635,06600,"Other digestive system diagnoses, not transferred wo sig CCC",ok
+Z465,6J,06,Z465,06600,"Other digestive system diagnoses, not transferred wo sig CCC",ok
+I880,6K,06,I880,06610,Abdominal pain or mesenteric adenitis wo sig CCC,ok
+R103,6K,06,R103,06610,Abdominal pain or mesenteric adenitis wo sig CCC,ok
+R1049,6K,06,R1049,06610,Abdominal pain or mesenteric adenitis wo sig CCC,ok
+B462,6L,06,B462,06630,Intestinal helminth and misc digestive dis age < 10 wo sig CCC,ok
+B769,6L,06,B769,06630,Intestinal helminth and misc digestive dis age < 10 wo sig CCC,ok
+B829,6L,06,B829,06630,Intestinal helminth and misc digestive dis age < 10 wo sig CCC,ok
+K20,6M,06,K20,06651,"Oesophagitis, gastritis and dyspepsia age < 10 w min CCC",ok
+K294,6M,06,K294,06651,"Oesophagitis, gastritis and dyspepsia age < 10 w min CCC",ok
+K30,6M,06,K30,06650,"Oesophagitis, gastritis and dyspepsia age < 10 wo sig CCC",ok
+K522,6N,06,K522,06580,Gastroenteritis age < 10 wo sig CCC,ok
+K5229,6N,06,K5229,06580,Gastroenteritis age < 10 wo sig CCC,ok
+K529,6N,06,K529,06580,Gastroenteritis age < 10 wo sig CCC,ok
+K701,7A,07,K701,07500,Cirrhosis & alcoholic hepatitis wo sig CCC,ok
+K741,7A,07,K741,07500,Cirrhosis & alcoholic hepatitis wo sig CCC,ok
+K746,7A,07,K746,07500,Cirrhosis & alcoholic hepatitis wo sig CCC,ok
+C220,7B,07,C220,07510,"Malig of hepatobil syst/pancreas, not transferred wo sig CCC",ok
+C249,7B,07,C249,07510,"Malig of hepatobil syst/pancreas, not transferred wo sig CCC",ok
+D376,7B,07,D376,07510,"Malig of hepatobil syst/pancreas, not transferred wo sig CCC",ok
+B252,7C,07,B252,07530,"Disorders of pancreas, except malignancy wo sig CCC",ok
+K862,7C,07,K862,07530,"Disorders of pancreas, except malignancy wo sig CCC",ok
+S3621,7C,07,S3621,07530,"Disorders of pancreas, except malignancy wo sig CCC",ok
+A064,7D,07,A064,07541,"Dis of liver, exc malignancy, cirrhosis, alc hepatitis w min CCC",ok
+K719,7D,07,K719,07540,"Dis of liver, exc malignancy, cirrhosis, alc hepatitis wo sig CCC",ok
+Z526,7D,07,Z526,07540,"Dis of liver, exc malignancy, cirrhosis, alc hepatitis wo sig CCC",ok
+K800,7E,07,K800,07550,Disorder of biliary tract wo sig CCC,ok
+K828,7E,07,K828,07550,Disorder of biliary tract wo sig CCC,ok
+R932,7E,07,R932,07550,Disorder of biliary tract wo sig CCC,ok
+S722,8A,08,S722,08500,Fracture of femur wo sig CCC,ok
+S72406,8A,08,S72406,08500,Fracture of femur wo sig CCC,ok
+S7291,8A,08,S7291,08500,Fracture of femur wo sig CCC,ok
+S323,8B,08,S323,08510,Fracture of hip and pelvis wo sig CCC,ok
+S72004,8B,08,S72004,08510,Fracture of hip and pelvis wo sig CCC,ok
+S72119,8B,08,S72119,08510,Fracture of hip and pelvis wo sig CCC,ok
+S333,8C,08,S333,08520,"Sprain, stain & dislocation of hip, pelvis & thigh wo sig CCC",ok
+S7305,8C,08,S7305,08520,"Sprain, stain & dislocation of hip, pelvis & thigh wo sig CCC",ok
+S797,8C,08,S797,08520,"Sprain, stain & dislocation of hip, pelvis & thigh wo sig CCC",ok
+B453,8D,08,B453,08530,Osteomyelitis wo sig CCC,ok
+M8639,8D,08,M8639,08530,Osteomyelitis wo sig CCC,ok
+M8699,8D,08,M8699,08530,Osteomyelitis wo sig CCC,ok
+C400,8E,08,C400,08540,Pathological fracture and malignancy wo sig CCC,ok
+M802,8E,08,M802,08540,Pathological fracture and malignancy wo sig CCC,ok
+M8449,8E,08,M8449,08540,Pathological fracture and malignancy wo sig CCC,ok
+L405,8F,08,L405,08550,Connective tissue disorders wo sig CCC,ok
+M068,8F,08,M068,26509,Ungroupable,ok
+M459,8F,08,M459,26509,Ungroupable,ok
+A180,8G,08,A180,08560,Septic arthritis wo sig CCC,ok
+M0023,8G,08,M0023,08560,Septic arthritis wo sig CCC,ok
+M0099,8G,08,M0099,08560,Septic arthritis wo sig CCC,ok
+M400,8H,08,M400,08570,Medical back problems wo sig CCC,ok
+M4719,8H,08,M4719,08570,Medical back problems wo sig CCC,ok
+T081,8H,08,T081,08570,Medical back problems wo sig CCC,ok
+E550,8J,08,E550,08581,Bone disease and arthropathies w min CCC,ok
+M2507,8J,08,M2507,08581,Bone disease and arthropathies w min CCC,ok
+M9429,8J,08,M9429,08580,Bone disease and arthropathies wo sig CCC,ok
+I730,8L,08,I730,08600,Signs and symptoms of MS system & CT wo sig CCC,ok
+M6240,8L,08,M6240,08600,Signs and symptoms of MS system & CT wo sig CCC,ok
+R762,8L,08,R762,08600,Signs and symptoms of MS system & CT wo sig CCC,ok
+M242,8M,08,M242,08610,"Tendonitis, myositis and bursitis wo sig CCC",ok
+M6634,8M,08,M6634,08610,"Tendonitis, myositis and bursitis wo sig CCC",ok
+M7799,8M,08,M7799,08610,"Tendonitis, myositis and bursitis wo sig CCC",ok
+M966,8N,08,M966,08620,"Aftercare, MS system & CT wo sig CCC",ok
+T847,8N,08,T847,08620,"Aftercare, MS system & CT wo sig CCC",ok
+Z479,8N,08,Z479,08620,"Aftercare, MS system & CT wo sig CCC",ok
+M2413,8P,08,M2413,08640,"Fx, spr, str & disl of f arm,hand & foot age 0-17 wo sig CCC",ok
+S564,8P,08,S564,08641,"Fx, spr, str & disl of f arm,hand & foot age 0-17 w min CCC",ok
+S936,8P,08,S936,08640,"Fx, spr, str & disl of f arm,hand & foot age 0-17 wo sig CCC",ok
+M220,8Q,08,M220,08660,"Fx, spr, str & disl of up arm& low leg age 0-17 wo sig CCC",ok
+S4300,8Q,08,S4300,08661,"Fx, spr, str & disl of up arm& low leg age 0-17 w min CCC",ok
+T135,8Q,08,T135,08660,"Fx, spr, str & disl of up arm& low leg age 0-17 wo sig CCC",ok
+B902,8R,08,B902,08670,other MS system and CT diagnoses wo sig CCC,ok
+M8589,8R,08,M8589,08670,other MS system and CT diagnoses wo sig CCC,ok
+Z522,8R,08,Z522,08670,other MS system and CT diagnoses wo sig CCC,ok
+E850,8S,08,E850,08730,Major connective tissue Dx wo sig CCC,ok
+M313,8S,08,M313,08730,Major connective tissue Dx wo sig CCC,ok
+M359,8S,08,M359,08730,Major connective tissue Dx wo sig CCC,ok
+L890,9A,09,L890,09500,Skin ulcers wo sig CCC,ok
+L893,9A,09,L893,09500,Skin ulcers wo sig CCC,ok
+L984,9A,09,L984,09500,Skin ulcers wo sig CCC,ok
+B000,9B,09,B000,09510,Severe skin disorders wo sig CCC,ok
+L409,9B,09,L409,09510,Severe skin disorders wo sig CCC,ok
+Q821,9B,09,Q821,09510,Severe skin disorders wo sig CCC,ok
+A067,9C,09,A067,09520,Moderate skin disorders wo sig CCC,ok
+L439,9C,09,L439,09520,Moderate skin disorders wo sig CCC,ok
+Q822,9C,09,Q822,09520,Moderate skin disorders wo sig CCC,ok
+A660,9D,09,A660,09530,Minor skin disorders wo sig CCC,ok
+L632,9D,09,L632,09530,Minor skin disorders wo sig CCC,ok
+Z521,9D,09,Z521,09530,Minor skin disorders wo sig CCC,ok
+C500,9E,09,C500,09540,Malignant breast disorders wo sig CCC,ok
+C508,9E,09,C508,09540,Malignant breast disorders wo sig CCC,ok
+D486,9E,09,D486,09540,Malignant breast disorders wo sig CCC,ok
+I972,9F,09,I972,09550,Non-malignant breast disorders wo sig CCC,ok
+N643,9F,09,N643,09550,Non-malignant breast disorders wo sig CCC,ok
+Z443,9F,09,Z443,09550,Non-malignant breast disorders wo sig CCC,ok
+A46,9G,09,A46,09571,Cellulitis Age 0-17 w min CCC,ok
+L031,9G,09,L031,09570,Cellulitis Age 0-17 wo sig CCC,ok
+L983,9G,09,L983,09571,Cellulitis Age 0-17 w min CCC,ok
+S000,9H,09,S000,09590,"Trauma to skin, subcut tissue & breast  age 0-17 wo sig CCC",ok
+S600,9H,09,S600,09590,"Trauma to skin, subcut tissue & breast  age 0-17 wo sig CCC",ok
+T130,9H,09,T130,09590,"Trauma to skin, subcut tissue & breast  age 0-17 wo sig CCC",ok
+A513,9J,09,A513,09651,Skin malignancy w min CCC,ok
+C443,9J,09,C443,09651,Skin malignancy w min CCC,ok
+C469,9J,09,C469,09651,Skin malignancy w min CCC,ok

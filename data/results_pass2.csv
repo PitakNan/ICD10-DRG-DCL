@@ -1,0 +1,71 @@
+code,pdc,mdc,echo_pdx,drg,drgname,status,context
+C510,13A,13,C510,13500,Non-ovarian/adnexal malignancy wo sig CCC,ok,female
+C543,13A,13,C543,13500,Non-ovarian/adnexal malignancy wo sig CCC,ok,female
+D399,13A,13,D399,13500,Non-ovarian/adnexal malignancy wo sig CCC,ok,female
+D250,13F,13,D250,13550,Menstrual & other female reproductive system disorders wo sig CCC,ok,female
+N921,13F,13,N921,13550,Menstrual & other female reproductive system disorders wo sig CCC,ok,female
+Z437,13F,13,Z437,13550,Menstrual & other female reproductive system disorders wo sig CCC,ok,female
+O151,14A,14,O151,14501,Vaginal delivery w min CCC,ok,female
+O702,14A,14,O702,14501,Vaginal delivery w min CCC,ok,female
+O849,14A,14,O849,14500,Vaginal delivery wo sig CCC,ok,female
+O100,14B,14,O100,14521,Antenatal condition w min CCC,ok,female
+O330,14B,14,O330,14520,Antenatal condition wo sig CCC,ok,female
+O998,14B,14,O998,14520,Antenatal condition wo sig CCC,ok,female
+A34,14C,14,A34,14511,Postpartum/post abortion w min CCC,ok,female
+O892,14C,14,O892,14511,Postpartum/post abortion w min CCC,ok,female
+O927,14C,14,O927,14510,Postpartum/post abortion wo sig CCC,ok,female
+O080,14D,14,O080,14511,Postpartum/post abortion w min CCC,ok,female
+O086,14D,14,O086,14511,Postpartum/post abortion w min CCC,ok,female
+Z391,14D,14,Z391,14510,Postpartum/post abortion wo sig CCC,ok,female
+O280,14E,14,O280,14520,Antenatal condition wo sig CCC,ok,female
+O600,14E,14,O600,14520,Antenatal condition wo sig CCC,ok,female
+Z369,14E,14,Z369,14520,Antenatal condition wo sig CCC,ok,female
+O000,14F,14,O000,14530,Ectopic pregnancy wo sig CCC,ok,female
+O002,14F,14,O002,14530,Ectopic pregnancy wo sig CCC,ok,female
+O009,14F,14,O009,14530,Ectopic pregnancy wo sig CCC,ok,female
+O200,14G,14,O200,14540,Threatened abortion wo sig CCC,ok,female
+O208,14G,14,O208,14540,Threatened abortion wo sig CCC,ok,female
+O209,14G,14,O209,14540,Threatened abortion wo sig CCC,ok,female
+O020,14H,14,O020,14550,Abortion wo sig CCC,ok,female
+O053,14H,14,O053,14550,Abortion wo sig CCC,ok,female
+O079,14H,14,O079,14550,Abortion wo sig CCC,ok,female
+O470,14J,14,O470,14560,False labour wo sig CCC,ok,female
+O471,14J,14,O471,14560,False labour wo sig CCC,ok,female
+O479,14J,14,O479,14560,False labour wo sig CCC,ok,female
+O021,14K,14,O021,14579,Complicated abortion,ok,female
+O052,14K,14,O052,14579,Complicated abortion,ok,female
+O077,14K,14,O077,14579,Complicated abortion,ok,female
+O010,14L,14,O010,14580,Molar pregnancy wo sig CCC,ok,female
+O011,14L,14,O011,14580,Molar pregnancy wo sig CCC,ok,female
+O019,14L,14,O019,14580,Molar pregnancy wo sig CCC,ok,female
+O987,25A,25,O987,25530,Other HIV-related condition wo sig CCC,ok,female
+A33,,15,A33,26539,"Ungroupable, invalid age",ok,newborn
+P523,,15,P523,26539,"Ungroupable, invalid age",ok,newborn
+Z388,,15,Z388,26539,"Ungroupable, invalid age",ok,newborn
+B200,25A,25,B200,25520,"HIV-related infection, not transferred wo sig CCC",ok,adult
+B201,25A,25,B201,25520,"HIV-related infection, not transferred wo sig CCC",ok,adult
+B202,25A,25,B202,25520,"HIV-related infection, not transferred wo sig CCC",ok,adult
+B203,25A,25,B203,25520,"HIV-related infection, not transferred wo sig CCC",ok,adult
+B204,25A,25,B204,25520,"HIV-related infection, not transferred wo sig CCC",ok,adult
+B205,25A,25,B205,25520,"HIV-related infection, not transferred wo sig CCC",ok,adult
+B206,25A,25,B206,25520,"HIV-related infection, not transferred wo sig CCC",ok,adult
+B207,25A,25,B207,25520,"HIV-related infection, not transferred wo sig CCC",ok,adult
+B208,25A,25,B208,25520,"HIV-related infection, not transferred wo sig CCC",ok,adult
+B209,25A,25,B209,25520,"HIV-related infection, not transferred wo sig CCC",ok,adult
+B210,25A,25,B210,25510,HIV-related malignancy wo sig CCC,ok,adult
+B211,25A,25,B211,25510,HIV-related malignancy wo sig CCC,ok,adult
+B212,25A,25,B212,25510,HIV-related malignancy wo sig CCC,ok,adult
+B213,25A,25,B213,25510,HIV-related malignancy wo sig CCC,ok,adult
+B217,25A,25,B217,25510,HIV-related malignancy wo sig CCC,ok,adult
+B218,25A,25,B218,25510,HIV-related malignancy wo sig CCC,ok,adult
+B219,25A,25,B219,25510,HIV-related malignancy wo sig CCC,ok,adult
+B220,25A,25,B220,25500,HIV-related CNS diseases wo sig CCC,ok,adult
+B221,25A,25,B221,25530,Other HIV-related condition wo sig CCC,ok,adult
+B222,25A,25,B222,25530,Other HIV-related condition wo sig CCC,ok,adult
+B227,25A,25,B227,25530,Other HIV-related condition wo sig CCC,ok,adult
+B230,25A,25,B230,25520,"HIV-related infection, not transferred wo sig CCC",ok,adult
+B231,25A,25,B231,25530,Other HIV-related condition wo sig CCC,ok,adult
+B232,25A,25,B232,25530,Other HIV-related condition wo sig CCC,ok,adult
+B233,25A,25,B233,25530,Other HIV-related condition wo sig CCC,ok,adult
+B238,25A,25,B238,25530,Other HIV-related condition wo sig CCC,ok,adult
+B24,25A,25,B24,25530,Other HIV-related condition wo sig CCC,ok,adult

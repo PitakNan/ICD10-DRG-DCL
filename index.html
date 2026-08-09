@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ICD-10 → DRG → DCL (Thai DRG 6.3.3)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --panel:#fff; --ink:#16202c; --muted:#66798f; --line:#dde3ea;
+  --accent:#1f4e79; --accent2:#4472c4; --chip:#eef3fa;
+  --d0:#8c9bab; --d1:#2e7d32; --d2:#ef6c00; --d3:#c62828; --d4:#6a1b9a;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11161c; --panel:#182029; --ink:#e8eef5; --muted:#93a4b8; --line:#2a3542;
+  --accent:#7fb2e5; --accent2:#9dc1ea; --chip:#1e2935;
+  --d0:#7d8b9a; --d1:#66bb6a; --d2:#ffa726; --d3:#ef5350; --d4:#ba68c8;
+}}
+:root[data-theme="dark"]{
+  --bg:#11161c; --panel:#182029; --ink:#e8eef5; --muted:#93a4b8; --line:#2a3542;
+  --accent:#7fb2e5; --accent2:#9dc1ea; --chip:#1e2935;
+  --d0:#7d8b9a; --d1:#66bb6a; --d2:#ffa726; --d3:#ef5350; --d4:#ba68c8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.55 "Segoe UI","Sarabun",system-ui,sans-serif}
+header{background:var(--accent);color:#fff;padding:14px 18px}
+header h1{margin:0;font-size:18px;font-weight:600}
+header p{margin:3px 0 0;font-size:12.5px;opacity:.85}
+main{max-width:1180px;margin:0 auto;padding:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:14px 16px;margin-bottom:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input[type=search]{flex:1;min-width:220px;padding:10px 12px;font-size:16px;
+  border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink)}
+button{padding:9px 14px;border:1px solid var(--line);border-radius:8px;cursor:pointer;
+  background:var(--chip);color:var(--ink);font-size:14px}
+button.primary{background:var(--accent2);border-color:var(--accent2);color:#fff}
+button:disabled{opacity:.5;cursor:default}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tabs button[aria-selected=true]{background:var(--accent2);border-color:var(--accent2);color:#fff}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--chip);font-weight:600;white-space:nowrap}
+.scroll{overflow-x:auto}
+.muted{color:var(--muted);font-size:13px}
+.chip{display:inline-block;background:var(--chip);border:1px solid var(--line);
+  border-radius:6px;padding:1px 7px;margin:2px 3px 2px 0;font-size:13px;font-family:ui-monospace,monospace}
+.dcl{display:inline-block;min-width:22px;text-align:center;border-radius:5px;
+  color:#fff;padding:1px 6px;font-weight:600;font-size:12.5px}
+.d0{background:var(--d0)}.d1{background:var(--d1)}.d2{background:var(--d2)}
+.d3{background:var(--d3)}.d4{background:var(--d4)}
+.hit{padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin:5px 0;cursor:pointer}
+.hit:hover{border-color:var(--accent2)}
+.warn{background:#fff4e5;border-color:#ffcc80;color:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .warn{background:#3a2a12;border-color:#7a5320;color:#ffce8a}}
+code{font-family:ui-monospace,monospace}
+</style>
+</head>
+<body>
+<header>
+  <h1>ICD-10 → DRG Group → DCL</h1>
+  <p>Thai DRG 6.3.3 · ตาราง DCL จากภาคผนวก F1 (ธ.ค. 2563) · PDx→DC ยิงตรวจจากโปรแกรม TDS6307 (6.3.4)</p>
+</header>
+<main>
+  <div class="card">
+    <div class="row">
+      <input id="q" type="search" placeholder="พิมพ์รหัส ICD-10 (J440), DRG group (0455) หรือชื่อโรค…" autocomplete="off">
+      <button id="btnXlsxAll" class="primary">Export ทั้งหมด (.xlsx)</button>
+    </div>
+    <div id="hits"></div>
+  </div>
+  <div id="view"></div>
+  <div class="card muted" id="about"></div>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dclSpan = d => `<span class="dcl d${d}">${d}</span>`;
+
+let MAIN = [], DRG = {}, DESC = {}, BYDC = new Map(), BYCODE = new Map();
+
+async function boot(){
+  const [m, d, de] = await Promise.all([
+    fetch('data/main.json').then(r=>r.json()),
+    fetch('data/drg.json').then(r=>r.json()),
+    fetch('data/desc.json').then(r=>r.json())
+  ]);
+  MAIN = m; DRG = d; DESC = de;
+  for(const r of MAIN){
+    BYCODE.set(r.c, r);
+    if(r.dc){ if(!BYDC.has(r.dc)) BYDC.set(r.dc, []); BYDC.get(r.dc).push(r); }
+  }
+  const mt = DRG.meta || {};
+  $('#about').innerHTML =
+    `<b>DCL</b> = Diagnosis Complexity Level — ค่าที่รหัสโรคนั้นให้<b>เมื่ออยู่ใน DRG group นั้น</b> `
+    + `(มีผลตอนเป็นโรคร่วม/โรคแทรก SDx) · ใส่ PDx เดี่ยว ๆ ไม่มี SDx ผลมักเป็น DCL 0<hr>`
+    + `ICD-10 ที่ใช้เป็น PDx ได้ <b>${MAIN.length.toLocaleString()}</b> รหัส · `
+    + `DRG group ที่มี PDx <b>${BYDC.size}</b> กลุ่ม · `
+    + `รหัสที่มี DCL &gt; 0 อย่างน้อยหนึ่งกลุ่ม <b>${(mt.dclCodes||0).toLocaleString()}</b> รหัส<br>`
+    + `ยิงยืนยันจากโปรแกรม TDS6307 โดยตรง <b>${(mt.grouperVerified||0).toLocaleString()}</b> รหัส `
+    + `(ที่เหลืออนุมานจาก PDC ของตัวเอง ซึ่งตรวจแล้วว่ารหัสใน PDC เดียวกันให้ DRG group เดียวกัน) · `
+    + `รหัสทารกแรกเกิด MDC 15 <b>${(mt.newborn||0).toLocaleString()}</b> รหัส ไม่มี DRG group ตายตัว `
+    + `เพราะกลุ่มตัดสินด้วย<b>น้ำหนักแรกรับ</b> ไม่ใช่รหัสโรค`;
+  route();
+}
+
+function search(q){
+  q = q.trim().toUpperCase();
+  if(!q) return [];
+  const out = [];
+  if(/^\d{3,4}$/.test(q)){
+    for(const dc of BYDC.keys()) if(dc.startsWith(q.padStart(4,'0')) || dc.startsWith(q))
+      out.push({t:'dc', k:dc, n:DRG.dc[dc]?.name||''});
+  }
+  for(const r of MAIN){
+    if(r.c.startsWith(q)) out.push({t:'code', k:r.c, n:r.d});
+    else if(q.length>2 && (r.d||'').toUpperCase().includes(q)) out.push({t:'code', k:r.c, n:r.d});
+    if(out.length>60) break;
+  }
+  for(const dc of BYDC.keys()){
+    const n = DRG.dc[dc]?.name || '';
+    if(q.length>2 && n.toUpperCase().includes(q)) out.push({t:'dc', k:dc, n});
+    if(out.length>80) break;
+  }
+  return out.slice(0,40);
+}
+
+$('#q').addEventListener('input', e => {
+  const hits = search(e.target.value);
+  $('#hits').innerHTML = hits.map(h =>
+    `<div class="hit" data-t="${h.t}" data-k="${h.k}">`
+    + `<code>${esc(h.k)}</code> <span class="muted">${h.t==='dc'?'DRG group':'ICD-10'}</span> — ${esc(h.n)}</div>`
+  ).join('');
+});
+$('#hits').addEventListener('click', e => {
+  const el = e.target.closest('.hit'); if(!el) return;
+  location.hash = (el.dataset.t==='dc'?'dc/':'code/') + el.dataset.k;
+});
+addEventListener('hashchange', route);
+
+function route(){
+  const h = decodeURIComponent(location.hash.slice(1));
+  if(h.startsWith('dc/')) showDC(h.slice(3));
+  else if(h.startsWith('code/')) showCode(h.slice(5));
+  else $('#view').innerHTML = '';
+}
+
+function levelsTable(dc){
+  const info = DRG.dc[dc]; if(!info) return '';
+  const rows = Object.keys(info.levels).sort().map(l => {
+    const v = info.levels[l];
+    return `<tr><td>${dclSpan(l)}</td><td><code>${v.drg}</code></td><td>${v.rw}</td>`
+      + `<td>${v.wtlos}</td><td>${v.ot}</td></tr>`;
+  }).join('');
+  return `<div class="scroll"><table><thead><tr><th>DCL</th><th>DRG</th><th>RW</th>`
+    + `<th>WTLOS</th><th>OT</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function showDC(dc){
+  const info = DRG.dc[dc];
+  const codes = (BYDC.get(dc)||[]).slice().sort((a,b)=> b.dcl-a.dcl || a.c.localeCompare(b.c));
+  if(!info && !codes.length){ $('#view').innerHTML = `<div class="card">ไม่พบ DRG group ${esc(dc)}</div>`; return; }
+  const buckets = new Map();
+  for(const r of codes){ if(!buckets.has(r.dcl)) buckets.set(r.dcl, []); buckets.get(r.dcl).push(r); }
+  const bucketRows = [...buckets.keys()].sort((a,b)=>b-a).map(d =>
+    `<tr><td>${dclSpan(d)}</td><td>${buckets.get(d).length}</td><td>`
+    + buckets.get(d).map(r=>`<span class="chip" title="${esc(r.d)}">${r.c}</span>`).join('')
+    + `</td></tr>`).join('');
+  $('#view').innerHTML = `
+    <div class="card">
+      <h2 style="margin:0 0 4px">DRG group ${esc(dc)} <span class="muted">MDC ${esc(info?.mdc||'')}</span></h2>
+      <p style="margin:0 0 10px">${esc(info?.name||'')}</p>
+      ${levelsTable(dc)}
+    </div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h3 style="margin:0">ICD-10 ที่เป็น PDx ของกลุ่มนี้ (${codes.length} รหัส) แยกตาม DCL</h3>
+        <button id="btnXlsxDC">Export กลุ่มนี้ (.xlsx)</button>
+      </div>
+      <div class="scroll"><table><thead><tr><th>DCL</th><th>จำนวน</th><th>ICD-10</th></tr></thead>
+      <tbody>${bucketRows}</tbody></table></div>
+      <p class="muted">DCL ข้างบนคือค่าที่รหัสนั้นให้<b>ในกลุ่ม ${esc(dc)}</b> ตามตาราง DCL ฉบับ 6.3.3</p>
+    </div>`;
+  $('#btnXlsxDC').onclick = () => exportXlsx(`DRG_${dc}.xlsx`, dcSheet(dc));
+}
+
+let DCLTAB = null;
+function dclTable(){
+  if(!DCLTAB) DCLTAB = fetch('data/dcl.json').then(r=>r.json());
+  return DCLTAB;
+}
+
+/** DCL is stored as one digit per DC against a shared DC index. */
+async function dclPairs(code){
+  const t = await dclTable();
+  const s = t.codes[code];
+  if(!s) return [];
+  const out = [];
+  for(let i=0;i<s.length;i++) if(s[i] !== '0') out.push([t.dcs[i], s[i]]);
+  return out;
+}
+
+async function showCode(code){
+  const r = BYCODE.get(code);
+  const pairs = await dclPairs(code);
+  const inOwn = r && r.dc ? (pairs.find(p=>p[0]===r.dc)?.[1] ?? 0) : null;
+  const list = pairs.map(([dc,d]) =>
+    `<tr><td><a href="#dc/${dc}"><code>${dc}</code></a></td>`
+    + `<td>${esc(DRG.dc[dc]?.name||'')}</td><td>${dclSpan(d)}</td></tr>`).join('');
+  $('#view').innerHTML = `
+    <div class="card">
+      <h2 style="margin:0 0 4px">${esc(code)}</h2>
+      <p style="margin:0 0 10px">${esc(r?.d || DESC[code] || '')}</p>
+      ${r ? `<table><tbody>
+        <tr><th>MDC</th><td>${esc(r.mdc)}</td></tr>
+        <tr><th>PDC (partition)</th><td><code>${esc(r.pdc||'-')}</code></td></tr>
+        <tr><th>เป็น PDx → DRG group</th><td>${r.dc?`<a href="#dc/${r.dc}"><code>${r.dc}</code></a> ${esc(DRG.dc[r.dc]?.name||'')}`:'<span class="muted">ไม่พบ</span>'}
+          <span class="muted">(${r.src==='grouper'?'ยิงจากโปรแกรมโดยตรง':'อนุมานจาก PDC ที่ยิงตรวจแล้ว'})</span></td></tr>
+        <tr><th>DCL ในกลุ่มนี้</th><td>${r.dc?dclSpan(inOwn):'-'}</td></tr>
+      </tbody></table>` : '<p class="muted">รหัสนี้ใช้เป็น PDx ไม่ได้ (ACCPDX ≠ Y)</p>'}
+    </div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h3 style="margin:0">ค่า DCL ของ ${esc(code)} ในทุก DRG group (${pairs.length} กลุ่ม)</h3>
+        <button id="btnXlsxCode">Export (.xlsx)</button>
+      </div>
+      ${pairs.length ? `<div class="scroll"><table><thead><tr><th>DC</th><th>ชื่อกลุ่ม</th><th>DCL</th></tr></thead>
+        <tbody>${list}</tbody></table></div>`
+        : '<p class="muted">รหัสนี้ให้ DCL = 0 ในทุก DRG group (ไม่ปรากฏในตาราง DCL)</p>'}
+    </div>`;
+  const btn = $('#btnXlsxCode');
+  if(btn) btn.onclick = () => exportXlsx(`ICD_${code}.xlsx`,
+    [['ICD-10','DC','DC name','DCL'], ...pairs.map(([dc,d])=>[code,dc,DRG.dc[dc]?.name||'',+d])]);
+}
+
+/* ---------- sheet builders ---------- */
+function dcSheet(dc){
+  const rows = [['DC','DC name','DCL','ICD-10','ICD-10 description']];
+  for(const r of (BYDC.get(dc)||[]).slice().sort((a,b)=>b.dcl-a.dcl||a.c.localeCompare(b.c)))
+    rows.push([dc, DRG.dc[dc]?.name||'', r.dcl, r.c, r.d]);
+  return rows;
+}
+function allSheet(){
+  const rows = [['DC','DC name','MDC','DCL','ICD-10','ICD-10 description','PDC','source']];
+  const dcs = [...BYDC.keys()].sort();
+  for(const dc of dcs)
+    for(const r of BYDC.get(dc).slice().sort((a,b)=>b.dcl-a.dcl||a.c.localeCompare(b.c)))
+      rows.push([dc, DRG.dc[dc]?.name||'', r.mdc, r.dcl, r.c, r.d, r.pdc, r.src]);
+  return rows;
+}
+$('#btnXlsxAll').onclick = () => exportXlsx('ICD10_DRG_DCL_all.xlsx', allSheet());
+
+/* ---------- minimal XLSX writer (store-only ZIP, no dependencies) ---------- */
+const CRC = (()=>{const t=new Uint32Array(256);
+  for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}
+  return b=>{let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=t[(c^b[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0}})();
+const enc = s => new TextEncoder().encode(s);
+const xe = s => String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+function sheetXml(rows){
+  const body = rows.map((r,i)=>'<row r="'+(i+1)+'">'+r.map((v,j)=>{
+    const ref = colName(j)+(i+1);
+    return (typeof v === 'number')
+      ? `<c r="${ref}"><v>${v}</v></c>`
+      : `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xe(v ?? '')}</t></is></c>`;
+  }).join('')+'</row>').join('');
+  return `<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${body}</sheetData></worksheet>`;
+}
+function colName(n){let s='';n++;while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=(n-m-1)/26}return s}
+
+function exportXlsx(name, rows){
+  const files = [
+    ['[Content_Types].xml', `<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>`],
+    ['_rels/.rels', `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
+    ['xl/workbook.xml', `<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="DCL" sheetId="1" r:id="rId1"/></sheets></workbook>`],
+    ['xl/_rels/workbook.xml.rels', `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`],
+    ['xl/worksheets/sheet1.xml', sheetXml(rows)]
+  ].map(([n,c])=>({name:n, data:enc(c)}));
+
+  const chunks = [], central = [];
+  let off = 0;
+  for(const f of files){
+    const crc = CRC(f.data), n = enc(f.name);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true); lh.setUint16(4,20,true); lh.setUint16(6,0x0800,true);
+    lh.setUint16(8,0,true); lh.setUint32(14,crc,true);
+    lh.setUint32(18,f.data.length,true); lh.setUint32(22,f.data.length,true);
+    lh.setUint16(26,n.length,true);
+    chunks.push(new Uint8Array(lh.buffer), n, f.data);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0,0x02014b50,true); ch.setUint16(4,20,true); ch.setUint16(6,20,true);
+    ch.setUint16(8,0x0800,true); ch.setUint16(10,0,true); ch.setUint32(16,crc,true);
+    ch.setUint32(20,f.data.length,true); ch.setUint32(24,f.data.length,true);
+    ch.setUint16(28,n.length,true); ch.setUint32(42,off,true);
+    central.push(new Uint8Array(ch.buffer), n);
+    off += 30 + n.length + f.data.length;
+  }
+  const cdSize = central.reduce((s,c)=>s+c.length,0);
+  const eo = new DataView(new ArrayBuffer(22));
+  eo.setUint32(0,0x06054b50,true); eo.setUint16(8,files.length,true);
+  eo.setUint16(10,files.length,true); eo.setUint32(12,cdSize,true); eo.setUint32(16,off,true);
+  const blob = new Blob([...chunks, ...central, new Uint8Array(eo.buffer)],
+    {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+}
+
+boot();
+</script>
+</body>
+</html>
