@@ -152,11 +152,22 @@ $('#q').addEventListener('input', e => {
 // keyboard *before* the click fires, reflowing the page so mouseup lands on
 // a different element -- the tap silently does nothing. Acting on
 // pointerdown and blocking the default keeps focus/layout stable.
+function closeSearch(){
+  $('#hits').innerHTML = '';
+  $('#q').value = '';
+}
 $('#hits').addEventListener('pointerdown', e => {
   const el = e.target.closest('.hit'); if(!el) return;
   e.preventDefault();
   const hash = (el.dataset.t==='dc'?'dc/':'code/') + el.dataset.k;
+  closeSearch();
   if(location.hash.slice(1) === hash) route(); else location.hash = hash;
+});
+// tapping/clicking anywhere outside the search box or its suggestion list
+// closes the list instead of requiring the field's native clear (x) button
+document.addEventListener('pointerdown', e => {
+  if(e.target.closest('#q') || e.target.closest('#hits')) return;
+  closeSearch();
 });
 addEventListener('hashchange', route);
 
