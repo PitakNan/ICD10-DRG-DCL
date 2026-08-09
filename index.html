@@ -51,6 +51,12 @@ th{background:var(--chip);font-weight:600;white-space:nowrap}
 .d3{background:var(--d3)}.d4{background:var(--d4)}
 .hit{padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin:5px 0;cursor:pointer}
 .hit:hover{border-color:var(--accent2)}
+.dcl-row{cursor:pointer}
+.dcl-row:hover{background:var(--chip)}
+.toggle{display:inline-block;width:14px;color:var(--muted);font-size:11px}
+.dcl-list{display:flex;flex-direction:column;gap:2px}
+.dcl-item{padding:1px 0}
+.dcl-item code{background:var(--chip);border:1px solid var(--line);border-radius:5px;padding:1px 6px;margin-right:6px}
 .warn{background:#fff4e5;border-color:#ffcc80;color:#8a4b00}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .warn{background:#3a2a12;border-color:#7a5320;color:#ffce8a}}
 code{font-family:ui-monospace,monospace}
@@ -156,16 +162,24 @@ function levelsTable(dc){
     + `<th>WTLOS</th><th>OT</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
+let lastDC = null;
 function showDC(dc){
+  if(dc !== lastDC){ expandedDCL.clear(); lastDC = dc; }
   const info = DRG.dc[dc];
   const codes = (BYDC.get(dc)||[]).slice().sort((a,b)=> b.dcl-a.dcl || a.c.localeCompare(b.c));
   if(!info && !codes.length){ $('#view').innerHTML = `<div class="card">ไม่พบ DRG group ${esc(dc)}</div>`; return; }
   const buckets = new Map();
   for(const r of codes){ if(!buckets.has(r.dcl)) buckets.set(r.dcl, []); buckets.get(r.dcl).push(r); }
-  const bucketRows = [...buckets.keys()].sort((a,b)=>b-a).map(d =>
-    `<tr><td>${dclSpan(d)}</td><td>${buckets.get(d).length}</td><td>`
-    + buckets.get(d).map(r=>`<span class="chip" title="${esc(r.d)}">${r.c}</span>`).join('')
-    + `</td></tr>`).join('');
+  const bucketRows = [...buckets.keys()].sort((a,b)=>b-a).map(d => {
+    const items = buckets.get(d);
+    const expanded = expandedDCL.has(d);
+    const cell = expanded
+      ? `<div class="dcl-list">${items.map(r=>`<div class="dcl-item"><code>${r.c}</code>${esc(r.d)}</div>`).join('')}</div>`
+      : items.map(r=>`<span class="chip" title="${esc(r.d)}">${r.c}</span>`).join('');
+    return `<tr class="dcl-row" data-dcl="${d}">`
+      + `<td><span class="toggle">${expanded?'▼':'▶'}</span>${dclSpan(d)}</td>`
+      + `<td>${items.length}</td><td>${cell}</td></tr>`;
+  }).join('');
   $('#view').innerHTML = `
     <div class="card">
       <h2 style="margin:0 0 4px">DRG group ${esc(dc)} <span class="muted">MDC ${esc(info?.mdc||'')}</span></h2>
@@ -179,10 +193,16 @@ function showDC(dc){
       </div>
       <div class="scroll"><table><thead><tr><th>DCL</th><th>จำนวน</th><th>ICD-10</th></tr></thead>
       <tbody>${bucketRows}</tbody></table></div>
-      <p class="muted">DCL ข้างบนคือค่าที่รหัสนั้นให้<b>ในกลุ่ม ${esc(dc)}</b> ตามตาราง DCL ฉบับ 6.3.3</p>
+      <p class="muted">DCL ข้างบนคือค่าที่รหัสนั้นให้<b>ในกลุ่ม ${esc(dc)}</b> ตามตาราง DCL ฉบับ 6.3.3 · คลิกที่แถว DCL เพื่อขยาย/ยุบดูรายชื่อโรค</p>
     </div>`;
   $('#btnXlsxDC').onclick = () => exportXlsx(`DRG_${dc}.xlsx`, dcSheet(dc));
+  $('#view').querySelectorAll('.dcl-row').forEach(tr => tr.addEventListener('click', () => {
+    const d = +tr.dataset.dcl;
+    if(expandedDCL.has(d)) expandedDCL.delete(d); else expandedDCL.add(d);
+    showDC(dc);
+  }));
 }
+let expandedDCL = new Set();
 
 let DCLTAB = null;
 function dclTable(){
