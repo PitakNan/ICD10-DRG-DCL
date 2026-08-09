@@ -85,6 +85,11 @@ const dclSpan = d => `<span class="dcl d${d}">${d}</span>`;
 
 let MAIN = [], DRG = {}, DESC = {}, BYDC = new Map(), BYCODE = new Map();
 
+function pushBucket(dc, r, dcl, ageNote){
+  if(!BYDC.has(dc)) BYDC.set(dc, []);
+  BYDC.get(dc).push({c:r.c, d:r.d, dcl, mdc:r.mdc, pdc:r.pdc, src:r.src, ageNote});
+}
+
 async function boot(){
   const [m, d, de] = await Promise.all([
     fetch('data/main.json').then(r=>r.json()),
@@ -94,7 +99,12 @@ async function boot(){
   MAIN = m; DRG = d; DESC = de;
   for(const r of MAIN){
     BYCODE.set(r.c, r);
-    if(r.dc){ if(!BYDC.has(r.dc)) BYDC.set(r.dc, []); BYDC.get(r.dc).push(r); }
+    if(r.dc){
+      pushBucket(r.dc, r, r.dcl, r.ageSplit ? `≥ ${r.ageSplit.cutoff} ปี` : null);
+    }
+    if(r.ageSplit){
+      pushBucket(r.ageSplit.young.dc, r, r.ageSplit.young.dcl, `< ${r.ageSplit.cutoff} ปี`);
+    }
   }
   const mt = DRG.meta || {};
   $('#about').innerHTML =
@@ -173,9 +183,10 @@ function showDC(dc){
   const bucketRows = [...buckets.keys()].sort((a,b)=>b-a).map(d => {
     const items = buckets.get(d);
     const expanded = expandedDCL.has(d);
+    const ageTag = r => r.ageNote ? ` <span class="muted">(เฉพาะอายุ ${esc(r.ageNote)})</span>` : '';
     const cell = expanded
-      ? `<div class="dcl-list">${items.map(r=>`<div class="dcl-item"><code>${r.c}</code>${esc(r.d)}</div>`).join('')}</div>`
-      : items.map(r=>`<span class="chip" title="${esc(r.d)}">${r.c}</span>`).join('');
+      ? `<div class="dcl-list">${items.map(r=>`<div class="dcl-item"><code>${r.c}</code>${esc(r.d)}${ageTag(r)}</div>`).join('')}</div>`
+      : items.map(r=>`<span class="chip" title="${esc(r.d)}${r.ageNote?' — เฉพาะอายุ '+r.ageNote:''}">${r.c}${r.ageNote?' <b>*</b>':''}</span>`).join('');
     return `<tr class="dcl-row" data-dcl="${d}">`
       + `<td><span class="toggle">${expanded?'▼':'▶'}</span>${dclSpan(d)}</td>`
       + `<td>${items.length}</td><td>${cell}</td></tr>`;
@@ -193,7 +204,8 @@ function showDC(dc){
       </div>
       <div class="scroll"><table><thead><tr><th>DCL</th><th>จำนวน</th><th>ICD-10</th></tr></thead>
       <tbody>${bucketRows}</tbody></table></div>
-      <p class="muted">DCL ข้างบนคือค่าที่รหัสนั้นให้<b>ในกลุ่ม ${esc(dc)}</b> ตามตาราง DCL ฉบับ 6.3.3 · คลิกที่แถว DCL เพื่อขยาย/ยุบดูรายชื่อโรค</p>
+      <p class="muted">DCL ข้างบนคือค่าที่รหัสนั้นให้<b>ในกลุ่ม ${esc(dc)}</b> ตามตาราง DCL ฉบับ 6.3.3 · คลิกที่แถว DCL เพื่อขยาย/ยุบดูรายชื่อโรค
+      ${codes.some(r=>r.ageNote) ? '· <b>*</b> รหัสนี้เข้ากลุ่มนี้เฉพาะช่วงอายุที่ระบุเท่านั้น (นอกช่วงอายุจะแยกไปอีก DRG group หนึ่ง)' : ''}</p>
     </div>`;
   $('#btnXlsxDC').onclick = () => exportXlsx(`DRG_${dc}.xlsx`, dcSheet(dc));
   $('#view').querySelectorAll('.dcl-row').forEach(tr => tr.addEventListener('click', () => {
@@ -234,9 +246,13 @@ async function showCode(code){
       ${r ? `<table><tbody>
         <tr><th>MDC</th><td>${esc(r.mdc)}</td></tr>
         <tr><th>PDC (partition)</th><td><code>${esc(r.pdc||'-')}</code></td></tr>
-        <tr><th>เป็น PDx → DRG group</th><td>${r.dc?`<a href="#dc/${r.dc}"><code>${r.dc}</code></a> ${esc(DRG.dc[r.dc]?.name||'')}`:'<span class="muted">ไม่พบ</span>'}
-          <span class="muted">(${r.src==='grouper'?'ยิงจากโปรแกรมโดยตรง':'อนุมานจาก PDC ที่ยิงตรวจแล้ว'})</span></td></tr>
-        <tr><th>DCL ในกลุ่มนี้</th><td>${r.dc?dclSpan(inOwn):'-'}</td></tr>
+        <tr><th>เป็น PDx → DRG group</th><td>${r.ageSplit ? `
+          <div>อายุ &lt; ${r.ageSplit.cutoff} ปี → <a href="#dc/${r.ageSplit.young.dc}"><code>${r.ageSplit.young.dc}</code></a> ${esc(DRG.dc[r.ageSplit.young.dc]?.name||'')} ${dclSpan(r.ageSplit.young.dcl)}</div>
+          <div>อายุ ≥ ${r.ageSplit.cutoff} ปี → <a href="#dc/${r.ageSplit.old.dc}"><code>${r.ageSplit.old.dc}</code></a> ${esc(DRG.dc[r.ageSplit.old.dc]?.name||'')} ${dclSpan(r.ageSplit.old.dcl)}</div>
+          <span class="muted">(กลุ่มนี้แตกตาม<b>อายุผู้ป่วย</b> ยืนยันจากโปรแกรมโดยตรงที่อายุ 5 และ 70 ปี)</span>`
+          : (r.dc?`<a href="#dc/${r.dc}"><code>${r.dc}</code></a> ${esc(DRG.dc[r.dc]?.name||'')}
+          <span class="muted">(${r.src==='grouper'?'ยิงจากโปรแกรมโดยตรง':'อนุมานจาก PDC ที่ยิงตรวจแล้ว'})</span>`:'<span class="muted">ไม่พบ</span>')}</td></tr>
+        ${r.ageSplit ? '' : `<tr><th>DCL ในกลุ่มนี้</th><td>${r.dc?dclSpan(inOwn):'-'}</td></tr>`}
       </tbody></table>` : '<p class="muted">รหัสนี้ใช้เป็น PDx ไม่ได้ (ACCPDX ≠ Y)</p>'}
     </div>
     <div class="card">
@@ -255,17 +271,17 @@ async function showCode(code){
 
 /* ---------- sheet builders ---------- */
 function dcSheet(dc){
-  const rows = [['DC','DC name','DCL','ICD-10','ICD-10 description']];
+  const rows = [['DC','DC name','DCL','ICD-10','ICD-10 description','เฉพาะอายุ']];
   for(const r of (BYDC.get(dc)||[]).slice().sort((a,b)=>b.dcl-a.dcl||a.c.localeCompare(b.c)))
-    rows.push([dc, DRG.dc[dc]?.name||'', r.dcl, r.c, r.d]);
+    rows.push([dc, DRG.dc[dc]?.name||'', r.dcl, r.c, r.d, r.ageNote||'']);
   return rows;
 }
 function allSheet(){
-  const rows = [['DC','DC name','MDC','DCL','ICD-10','ICD-10 description','PDC','source']];
+  const rows = [['DC','DC name','MDC','DCL','ICD-10','ICD-10 description','PDC','source','เฉพาะอายุ']];
   const dcs = [...BYDC.keys()].sort();
   for(const dc of dcs)
     for(const r of BYDC.get(dc).slice().sort((a,b)=>b.dcl-a.dcl||a.c.localeCompare(b.c)))
-      rows.push([dc, DRG.dc[dc]?.name||'', r.mdc, r.dcl, r.c, r.d, r.pdc, r.src]);
+      rows.push([dc, DRG.dc[dc]?.name||'', r.mdc, r.dcl, r.c, r.d, r.pdc, r.src, r.ageNote||'']);
   return rows;
 }
 $('#btnXlsxAll').onclick = () => exportXlsx('ICD10_DRG_DCL_all.xlsx', allSheet());

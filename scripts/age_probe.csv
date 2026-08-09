@@ -1,0 +1,31 @@
+pdc,code,age,drg,drgname,status
+11A,I120,5,11510,"Chronic renal failure, age < 18 wo sig CCC",ok
+11J,N170,5,11600,Acute renal failure age < 18 wo sig CCC,ok
+2A,A185,5,02521,Acute and major eye infections age < 55 w min CCC,ok
+21A,S010,5,21510,Traumatic injury age 0-17 wo sig CCC,ok
+21B,T780,5,21530,Allergic reactions age 0-17 wo sig CCC,ok
+21C,R502,5,21550,Poisoning & toxic effects of drugs age 0-17 wo sig CCC,ok
+8P,M2413,5,08640,"Fx, spr, str & disl of f arm,hand & foot age 0-17 wo sig CCC",ok
+8Q,M220,5,08660,"Fx, spr, str & disl of up arm& low leg age 0-17 wo sig CCC",ok
+9G,A46,5,09571,Cellulitis Age 0-17 w min CCC,ok
+9H,S000,5,09590,"Trauma to skin, subcut tissue & breast  age 0-17 wo sig CCC",ok
+6G,A000,5,06581,Gastroenteritis age < 10 w min CCC,ok
+6N,K522,5,06580,Gastroenteritis age < 10 wo sig CCC,ok
+6H,B378,5,06630,Intestinal helminth and misc digestive dis age < 10 wo sig CCC,ok
+6L,B462,5,06630,Intestinal helminth and misc digestive dis age < 10 wo sig CCC,ok
+6M,K20,5,06651,"Oesophagitis, gastritis and dyspepsia age < 10 w min CCC",ok
+11A,I120,70,11500,"Chronic renal failure, age > 17 wo sig CCC",ok
+11J,N170,70,11590,"Acute renal failure age > 17, not transferred wo sig CCC",ok
+2A,A185,70,02510,Acute and major eye infections age > 54 wo sig CCC,ok
+21A,S010,70,21500,Traumatic injury age >17 wo sig CCC,ok
+21B,T780,70,21520,Allergic reactions age >17 wo sig CCC,ok
+21C,R502,70,21540,Poisoning & toxic effects of drugs age >17 wo sig CCC,ok
+8P,M2413,70,08630,"Fx, spr, str & disl of f arm,hand & foot age >17 wo sig CCC",ok
+8Q,M220,70,08650,"Fx, spr, str & disl of up arm& low leg age >17 wo sig CCC",ok
+9G,A46,70,09560,Cellulitis Age > 17 wo sig CCC,ok
+9H,S000,70,09580,"Trauma to skin, subcut tissue & breast  age >17 wo sig CCC",ok
+6G,A000,70,06570,Infectious gastroenteritis age > 9 wo sig CCC,ok
+6N,K522,70,06760,Non-infectious gastroenteritis age > 9 wo sig CCC,ok
+6H,B378,70,06660,Miscellneous digestive disorders age > 9 wo sig CCC,ok
+6L,B462,70,06620,Intestinal helminthiases age > 9 wo sig CCC,ok
+6M,K20,70,06641,"Oesophagitis, gastritis and dyspepsia age > 9 w min CCC",ok

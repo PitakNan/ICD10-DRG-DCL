@@ -1,8 +1,9 @@
 """Assemble the web-app dataset from: DCL PDFs (6.3.3) + TDS6307 DBFs + grouper sweep."""
 import csv, json, os, sys, collections
 import dbf as D
+from age_split_table import AGE_SPLIT
 
-OUTDIR = 'site/data'
+OUTDIR = 'data'
 
 
 def load():
@@ -75,11 +76,21 @@ def main():
             continue
         dc = (fired.get(code) or '')[:4] or pdc2dc.get(pdc, '')
         src = 'grouper' if code in fired else ('pdc' if dc else 'none')
-        main.append({
+        row = {
             'c': code, 'd': desc.get(code, ''), 'mdc': r['MDC'], 'pdc': pdc,
             'dc': dc, 'dcl': dcl.get(code, {}).get(dc, 0) if dc else 0,
             'sex': r['SEX'], 'src': src,
-        })
+        }
+        if pdc in AGE_SPLIT:
+            cutoff, dc_young, dc_old = AGE_SPLIT[pdc]
+            row['dc'] = dc_old
+            row['dcl'] = dcl.get(code, {}).get(dc_old, 0)
+            row['ageSplit'] = {
+                'cutoff': cutoff,
+                'young': {'dc': dc_young, 'dcl': dcl.get(code, {}).get(dc_young, 0)},
+                'old': {'dc': dc_old, 'dcl': dcl.get(code, {}).get(dc_old, 0)},
+            }
+        main.append(row)
     json.dump(main, open(OUTDIR + '/main.json', 'w'), separators=(',', ':'))
     print('main rows', len(main), 'with DC', sum(1 for m in main if m['dc']),
           'from grouper', sum(1 for m in main if m['src'] == 'grouper'))
