@@ -2,6 +2,27 @@
 process.env.NODE_PATH = require('child_process').execSync('npm root -g').toString().trim();
 require('module').Module._initPaths();
 const { chromium } = require('playwright');
+const fs = require('fs'), os = require('os'), path = require('path');
+
+/* the page writes store-only ZIPs, so entries can be read without inflate */
+function unzip(buf){
+  const files = {};
+  for(let i = 0; i + 4 <= buf.length; ){
+    if(buf.readUInt32LE(i) !== 0x04034b50){ i++; continue; }
+    const size = buf.readUInt32LE(i+18), nlen = buf.readUInt16LE(i+26), elen = buf.readUInt16LE(i+28);
+    const name = buf.slice(i+30, i+30+nlen).toString('utf8');
+    const start = i + 30 + nlen + elen;
+    files[name] = buf.slice(start, start + size);
+    i = start + size;
+  }
+  return files;
+}
+function sheetRows(xml){
+  return [...xml.matchAll(/<row[^>]*>(.*?)<\/row>/gs)].map(m =>
+    [...m[1].matchAll(/<c[^>]*>(?:<is><t[^>]*>(.*?)<\/t><\/is>|<v>(.*?)<\/v>)<\/c>/gs)]
+      .map(c => (c[1] !== undefined ? c[1] : c[2])
+        .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>')));
+}
 
 const BASE = process.argv[2] || 'http://127.0.0.1:8765/index.html';
 let pass = 0, fail = 0;
@@ -12,7 +33,8 @@ const ok = (name, cond, extra='') => {
 
 (async () => {
   const browser = await chromium.launch({ channel: 'chrome' });
-  const page = await browser.newPage();
+  const ctx = await browser.newContext({ acceptDownloads: true });
+  const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(String(e)));
   page.on('console', m => { const u = (m.location() && m.location().url) || '';
@@ -215,6 +237,42 @@ const ok = (name, cond, extra='') => {
   // total for 0155 = 5,135 contributors
   const totalTxt = await page.$eval('#revview p.muted', e => e.textContent.replace(/\s+/g,' '));
   ok('total contributor count = 5,135', totalTxt.includes('5,135'), totalTxt.slice(0,160));
+
+  // age-split codes land in two different groups; showing only the >= side
+  // silently understated 578 of the rows in group 0155 alone
+  await page.evaluate(() => { REV.levels = new Set([1,2,3,4,5]); showRev(); });
+  await page.waitForTimeout(400);
+  await page.fill('#rFilter', 'A000');
+  await page.waitForTimeout(500);
+  const splitCell = await page.$eval('#revview tbody tr td:nth-child(4)', e => e.textContent.replace(/\s+/g,' ').trim());
+  ok('age-split code shows BOTH PDx groups with the cutoff',
+     splitCell.includes('0658') && splitCell.includes('0657') && splitCell.includes('10'), splitCell);
+
+  await page.fill('#rFilter', 'D630');
+  await page.waitForTimeout(500);
+  const nonPdx = await page.$eval('#revview tbody tr td:nth-child(4)', e => e.textContent.trim());
+  ok('comorbid-only code is labelled as not usable as PDx', nonPdx.includes('ไม่ได้'), nonPdx);
+
+  // the .xlsx really opens: right entries, right row count, Thai + leading zero intact
+  await page.fill('#rFilter', '');
+  await page.waitForTimeout(700);
+  const label = await page.$eval('#btnXlsxRev', e => e.textContent.trim());
+  ok('export button states how many rows it will write', /5,135/.test(label), label);
+  const [dl] = await Promise.all([ page.waitForEvent('download'), page.click('#btnXlsxRev') ]);
+  const xp = path.join(os.tmpdir(), 'icd_test_' + Date.now() + '.xlsx');
+  await dl.saveAs(xp);
+  const z = unzip(fs.readFileSync(xp));
+  ok('xlsx has the 5 OPC parts', Object.keys(z).length === 5, Object.keys(z).join(','));
+  const xrows = sheetRows(z['xl/worksheets/sheet1.xml'].toString('utf8'));
+  const nOnScreen = await page.evaluate(() => REVROWS.length);
+  ok('xlsx row count == filtered set + header', xrows.length === nOnScreen + 1, xrows.length + ' vs ' + (nOnScreen+1));
+  ok('xlsx keeps the leading zero on the DRG group', xrows[1][0] === '0155', xrows[1][0]);
+  ok('xlsx Thai header intact', xrows[0][4] === 'คำอธิบาย' && xrows[0][5].includes('PDx'), JSON.stringify(xrows[0]));
+  const a000 = xrows.find(r => r[3] === 'A000');
+  ok('xlsx carries both age groups too', a000 && /0658.*0657/.test(a000[5]), a000 && a000[5]);
+  fs.unlinkSync(xp);
+  await page.evaluate(() => { REV.levels = new Set([5,4,3]); REV.limit = REV.PAGE; showRev(); });
+  await page.waitForTimeout(500);
 
   // group with no DCL data at all
   await page.evaluate(() => { location.hash = 'rev/1457'; });

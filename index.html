@@ -730,6 +730,27 @@ let REVROWS = [];                                   // last render, for export
 
 function revHash(){ return 'rev' + (REV.dc ? '/' + REV.dc : ''); }
 
+// 1,377 codes land in a different DRG group above and below an age cutoff.
+// Showing only r.dc (the >= side) hides the other group -- for group 0155 alone
+// that silently understated 578 of the rows, and the code page shows both.
+function pdxCell(r){
+  if(!r) return '<span class="muted">ใช้เป็น PDx ไม่ได้</span>';
+  const mark = dc => dc === REV.dc ? ' <span class="muted">(กลุ่มเดียวกัน)</span>' : '';
+  const link = dc => `<a href="#dc/${dc}"><code>${dc}</code></a>`;
+  if(r.ageSplit){
+    const a = r.ageSplit;
+    return `${link(a.young.dc)} <span class="muted">อายุ &lt; ${a.cutoff} ปี</span>${mark(a.young.dc)}<br>`
+         + `${link(a.old.dc)} <span class="muted">อายุ ≥ ${a.cutoff} ปี</span>${mark(a.old.dc)}`;
+  }
+  return r.dc ? link(r.dc) + mark(r.dc) : '<span class="muted">—</span>';
+}
+function pdxText(r){
+  if(!r) return 'ใช้เป็น PDx ไม่ได้';
+  if(r.ageSplit) return `${r.ageSplit.young.dc} (อายุ < ${r.ageSplit.cutoff} ปี) / `
+                      + `${r.ageSplit.old.dc} (อายุ ≥ ${r.ageSplit.cutoff} ปี)`;
+  return r.dc || '';
+}
+
 async function revSearch(q){
   const qd = q.trim().toUpperCase(); if(!qd) return [];
   const qc = normCode(qd);
@@ -778,6 +799,8 @@ async function showRev(){
   $('#rctl').hidden = !REV.dc;
   if(!REV.dc){
     REVROWS = [];
+    $('#btnXlsxRev').textContent = 'Export รายการนี้ (.xlsx)';
+    $('#btnXlsxRev').disabled = true;
     box.innerHTML = `<div class="card muted">ยังไม่ได้เลือก DRG group — พิมพ์รหัสกลุ่มหรือชื่อกลุ่มในช่องด้านบน `
       + `(ลองกลุ่ม <a href="#rev/0155">0155</a> ตามตัวอย่าง)</div>`;
     return;
@@ -787,6 +810,8 @@ async function showRev(){
   const info = DRG.dc[REV.dc];
   if(i < 0){
     REVROWS = []; $('#rlevels').innerHTML = '';
+    $('#btnXlsxRev').textContent = 'Export รายการนี้ (.xlsx)';
+    $('#btnXlsxRev').disabled = true;
     box.innerHTML = `<div class="card"><h3 style="margin:0 0 6px">DRG group <code>${esc(REV.dc)}</code>
       <span class="muted">${esc(info?.name||'')}</span></h3>
       <p class="muted" style="margin:0">${info ? 'ไม่มีรหัสโรคใดให้ค่า DCL กับกลุ่มนี้เลย — กลุ่มนี้จึงไม่มีข้อมูลโรคร่วมให้แสดง'
@@ -803,6 +828,9 @@ async function showRev(){
   if(f) rows = rows.filter(([c]) => c.includes(fc) || (descOf(c)||'').toUpperCase().includes(f));
   rows.sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0]));
   REVROWS = rows;
+  // the export follows the filter, not the whole group -- say so on the button
+  $('#btnXlsxRev').textContent = `Export ${rows.length.toLocaleString()} แถวที่กรองไว้ (.xlsx)`;
+  $('#btnXlsxRev').disabled = !rows.length;
 
   $('#rlevels').innerHTML = `<span class="muted">แสดงเฉพาะ DCL:</span>`
     + [5,4,3,2,1].map(lv => `<button data-lv="${lv}"${REV.levels.has(lv)?' class="primary"':''}`
@@ -811,13 +839,8 @@ async function showRev(){
 
   const shown = rows.slice(0, REV.limit);
   const body = shown.map(([c,d]) => {
-    const r = BYCODE.get(c);
-    const pdx = r
-      ? (r.dc ? `<a href="#dc/${r.dc}"><code>${r.dc}</code></a>${r.dc===REV.dc?' <span class="muted">(กลุ่มเดียวกัน)</span>':''}`
-              : '<span class="muted">—</span>')
-      : '<span class="muted">ใช้เป็น PDx ไม่ได้</span>';
     return `<tr><td>${dclSpan(d)}</td><td><a href="#code/${c}"><code>${esc(c)}</code></a></td>`
-      + `<td>${esc(descOf(c))}</td><td>${pdx}</td></tr>`;
+      + `<td>${esc(descOf(c))}</td><td>${pdxCell(BYCODE.get(c))}</td></tr>`;
   }).join('');
 
   box.innerHTML = `
@@ -849,10 +872,7 @@ $('#btnXlsxRev').onclick = () => {
   if(!REV.dc || !REVROWS.length) return;
   const name = DRG.dc[REV.dc]?.name || '';
   const rows = [['DRG group','DC name','DCL','ICD-10','คำอธิบาย','เป็น PDx ของกลุ่ม']];
-  for(const [c,d] of REVROWS){
-    const r = BYCODE.get(c);
-    rows.push([REV.dc, name, d, c, descOf(c), r ? (r.dc||'') : 'ใช้เป็น PDx ไม่ได้']);
-  }
+  for(const [c,d] of REVROWS) rows.push([REV.dc, name, d, c, descOf(c), pdxText(BYCODE.get(c))]);
   exportXlsx(`DRG_${REV.dc}_comorbid.xlsx`, rows);
 };
 
