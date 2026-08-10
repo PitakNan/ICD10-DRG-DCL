@@ -419,20 +419,36 @@ function cmpHash(){
 /* ---- picking codes ---- */
 // searches the DCL table (7,219 codes), not MAIN: 666 codes carry a DCL as a
 // comorbidity but are not accepted as PDx, so the PDx-only index misses them
+// a trailing "X" (as doctors write it, e.g. "F102X") is a wildcard for "and
+// whatever digit(s) follow" -- no real code ever contains a literal X, so it's
+// always safe to treat it as a prefix cut rather than a literal character
+function wildcardPrefix(q){ return q.includes('X') ? q.slice(0, q.indexOf('X')) : q; }
 async function cmpSearch(q){
   q = q.trim().toUpperCase(); if(!q) return [];
+  const qBase = wildcardPrefix(q);
   const t = await dclTable(), out = [];
   for(const c of Object.keys(t.codes)){
-    if(c.startsWith(q)) out.push(c);
-    else if(q.length > 2 && (descOf(c)||'').toUpperCase().includes(q)) out.push(c);
+    if(c.startsWith(qBase)) out.push(c);
+    else if(qBase.length > 2 && (descOf(c)||'').toUpperCase().includes(qBase)) out.push(c);
     if(out.length > 40) break;
   }
   return out.slice(0,25);
 }
-function addCodes(str){
-  const parts = String(str).toUpperCase().split(/[^A-Z0-9]+/).filter(s=>/^[A-Z]\d{2,3}$/.test(s));
+async function addCodes(str){
+  const tokens = String(str).toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean);
+  const t = await dclTable();
   let added = 0;
-  for(const p of parts) if(!CMP.codes.includes(p)){ CMP.codes.push(p); added++; }
+  for(const tok of tokens){
+    if(/^[A-Z]\d{2,3}$/.test(tok)){
+      if(!CMP.codes.includes(tok)){ CMP.codes.push(tok); added++; }
+    }else if(tok.includes('X')){
+      const prefix = wildcardPrefix(tok);
+      if(!/^[A-Z]\d{1,4}$/.test(prefix)) continue;
+      for(const c of Object.keys(t.codes)){
+        if(c.startsWith(prefix) && !CMP.codes.includes(c)){ CMP.codes.push(c); added++; }
+      }
+    }
+  }
   if(added) go(cmpHash());
   return added;
 }
@@ -443,15 +459,16 @@ $('#cq').addEventListener('input', async e => {
   $('#chits').innerHTML = hits.map(c =>
     `<div class="hit" data-k="${c}"><code>${esc(c)}</code> — ${esc(descOf(c))}</div>`).join('');
 });
-$('#cq').addEventListener('keydown', e => {
+$('#cq').addEventListener('keydown', async e => {
   if(e.key !== 'Enter') return;
-  if(addCodes(e.target.value)){ e.target.value=''; $('#chits').innerHTML=''; }
+  const v = e.target.value;
+  if(await addCodes(v)){ e.target.value=''; $('#chits').innerHTML=''; }
 });
-$('#chits').addEventListener('pointerdown', e => {          // pointerdown: see note above
+$('#chits').addEventListener('pointerdown', async e => {    // pointerdown: see note above
   const el = e.target.closest('.hit'); if(!el) return;
   e.preventDefault();
   $('#cq').value = ''; $('#chits').innerHTML = '';
-  addCodes(el.dataset.k);
+  await addCodes(el.dataset.k);
 });
 document.addEventListener('pointerdown', e => {
   if(e.target.closest('#cq') || e.target.closest('#chits')) return;
@@ -585,7 +602,11 @@ async function showCmp(){
         <span class="muted">แถวที่แสดง: ${esc(scope)}${f?` · กรอง "${esc(CMP.filter)}"`:''}</span>
       </div>
       <div class="mxwrap" style="margin-top:10px"><table class="mx"><thead>${head}</thead><tbody>${body}</tbody></table></div>
-      ${rows.length ? '' : '<p class="muted">ไม่มีแถวที่ตรงเงื่อนไข</p>'}
+      ${rows.length ? '' : `<p class="muted">ไม่มีแถวที่ตรงเงื่อนไข${
+        f && /^[A-Z]\d{2,6}$/.test(f)
+          ? ` — "${esc(CMP.filter)}" ดูเหมือนรหัส ICD-10 ช่องนี้กรอง<b>แถว DRG group</b>เท่านั้น ถ้าต้องการเพิ่มรหัสนี้มาเปรียบเทียบ ให้พิมพ์ในช่อง "เพิ่ม ICD-10 ที่จะเทียบ" ด้านบนแทน`
+          : ''
+      }</p>`}
     </div>
     <div class="card">
       <h3 style="margin:0 0 8px">สรุปเปรียบเทียบ <span class="muted">(คิดจาก ${rows.length} กลุ่มที่แสดงอยู่)</span></h3>
