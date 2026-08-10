@@ -8,17 +8,17 @@
 :root{
   --bg:#f6f7f9; --panel:#fff; --ink:#16202c; --muted:#66798f; --line:#dde3ea;
   --accent:#1f4e79; --accent2:#4472c4; --chip:#eef3fa;
-  --d0:#8c9bab; --d1:#2e7d32; --d2:#ef6c00; --d3:#c62828; --d4:#6a1b9a;
+  --d0:#8c9bab; --d1:#2e7d32; --d2:#ef6c00; --d3:#c62828; --d4:#6a1b9a; --d5:#ad1457;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#11161c; --panel:#182029; --ink:#e8eef5; --muted:#93a4b8; --line:#2a3542;
   --accent:#7fb2e5; --accent2:#9dc1ea; --chip:#1e2935;
-  --d0:#7d8b9a; --d1:#66bb6a; --d2:#ffa726; --d3:#ef5350; --d4:#ba68c8;
+  --d0:#7d8b9a; --d1:#66bb6a; --d2:#ffa726; --d3:#ef5350; --d4:#ba68c8; --d5:#f06292;
 }}
 :root[data-theme="dark"]{
   --bg:#11161c; --panel:#182029; --ink:#e8eef5; --muted:#93a4b8; --line:#2a3542;
   --accent:#7fb2e5; --accent2:#9dc1ea; --chip:#1e2935;
-  --d0:#7d8b9a; --d1:#66bb6a; --d2:#ffa726; --d3:#ef5350; --d4:#ba68c8;
+  --d0:#7d8b9a; --d1:#66bb6a; --d2:#ffa726; --d3:#ef5350; --d4:#ba68c8; --d5:#f06292;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);
@@ -48,7 +48,7 @@ th{background:var(--chip);font-weight:600;white-space:nowrap}
 .dcl{display:inline-block;min-width:22px;text-align:center;border-radius:5px;
   color:#fff;padding:1px 6px;font-weight:600;font-size:12.5px}
 .d0{background:var(--d0)}.d1{background:var(--d1)}.d2{background:var(--d2)}
-.d3{background:var(--d3)}.d4{background:var(--d4)}
+.d3{background:var(--d3)}.d4{background:var(--d4)}.d5{background:var(--d5)}
 .hit{padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin:5px 0;cursor:pointer}
 .hit:hover{border-color:var(--accent2)}
 .dcl-row{cursor:pointer}
@@ -60,6 +60,43 @@ th{background:var(--chip);font-weight:600;white-space:nowrap}
 .warn{background:#fff4e5;border-color:#ffcc80;color:#8a4b00}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .warn{background:#3a2a12;border-color:#7a5320;color:#ffce8a}}
 code{font-family:ui-monospace,monospace}
+a{color:var(--accent2)}   /* default link blue is unreadable on the dark panel */
+
+/* ---------- comorbid matrix ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pill{display:inline-flex;align-items:center;gap:5px;background:var(--chip);
+  border:1px solid var(--line);border-radius:999px;padding:3px 5px 3px 11px;font-size:13px}
+.pill code{font-size:11.5px;color:var(--muted)}
+.pill button{padding:0 5px;border:0;background:transparent;font-size:13px;line-height:1.4;color:var(--muted)}
+.pill button:hover{color:var(--ink);background:transparent}
+.pill input.ren{font:inherit;font-weight:700;border:0;border-bottom:1px solid var(--accent2);
+  background:transparent;color:var(--ink);padding:0 2px;outline:none}
+.pill.missing{border-color:var(--d3);border-style:dashed}
+.mxwrap{overflow:auto;max-height:74vh;border:1px solid var(--line);border-radius:8px}
+table.mx{border-collapse:separate;border-spacing:0;font-size:13px;width:auto;min-width:100%}
+table.mx th,table.mx td{border-bottom:1px solid var(--line);padding:5px 8px;white-space:nowrap}
+table.mx thead th{position:sticky;top:0;z-index:3;background:var(--chip);
+  cursor:pointer;text-align:center;font-size:12px;vertical-align:bottom}
+table.mx th.dccell,table.mx td.dccell{position:sticky;left:0;z-index:2;
+  background:var(--panel);text-align:left;width:230px;max-width:230px}
+table.mx thead th.dccell{z-index:4;background:var(--chip);text-align:left}
+table.mx tbody tr:hover td.dccell{background:var(--chip)}
+table.mx td.v{text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
+.h1{background:rgba(255,167,38,.16)}.h2{background:rgba(255,167,38,.34)}
+.h3{background:rgba(244,81,30,.40)}.h4{background:rgba(198,40,40,.50)}
+.h5{background:rgba(136,14,79,.60);color:#fff}
+table.mx td.v.z{color:var(--muted);font-weight:400}
+table.mx td.v.max{outline:2px solid var(--accent2);outline-offset:-2px}
+table.mx tfoot td{background:var(--chip);font-size:12px;position:sticky;bottom:0;z-index:2}
+table.mx tfoot td.dccell{z-index:3}
+.colname{display:block;font-weight:600}
+.colcode{display:block;font-size:11px;color:var(--muted);font-weight:400}
+/* one line + ellipsis: a 29x19 grid is unreadable if group names wrap to 3 lines */
+.dcname{display:block;font-size:11.5px;color:var(--muted);font-weight:400;
+  max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.legend{display:flex;gap:5px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--muted)}
+.legend span.sw{display:inline-block;width:26px;text-align:center;border-radius:4px;
+  padding:1px 0;color:var(--ink);font-weight:600}
 </style>
 </head>
 <body>
@@ -68,15 +105,54 @@ code{font-family:ui-monospace,monospace}
   <p>Thai DRG 6.3.3 · ตาราง DCL จากภาคผนวก F1 (ธ.ค. 2563) · PDx→DC ยิงตรวจจากโปรแกรม TDS6307 (6.3.4)</p>
 </header>
 <main>
-  <div class="card">
-    <div class="row">
-      <input id="q" type="search" placeholder="พิมพ์รหัส ICD-10 (J440), DRG group (0455) หรือชื่อโรค…" autocomplete="off">
-      <button id="btnXlsxAll" class="primary">Export ทั้งหมด (.xlsx)</button>
-    </div>
-    <div id="hits"></div>
+  <div class="tabs" id="tabs">
+    <button data-tab="search" aria-selected="true">🔎 ค้นหารายรหัส / รายกลุ่ม</button>
+    <button data-tab="cmp" aria-selected="false">🧮 เทียบโรคร่วม (Comorbid DCL)</button>
   </div>
-  <div id="view"></div>
-  <div class="card muted" id="about"></div>
+
+  <section id="pane-search">
+    <div class="card">
+      <div class="row">
+        <input id="q" type="search" placeholder="พิมพ์รหัส ICD-10 (J440), DRG group (0455) หรือชื่อโรค…" autocomplete="off">
+        <button id="btnXlsxAll" class="primary">Export ทั้งหมด (.xlsx)</button>
+      </div>
+      <div id="hits"></div>
+    </div>
+    <div id="view"></div>
+    <div class="card muted" id="about"></div>
+  </section>
+
+  <section id="pane-cmp" hidden>
+    <div class="card">
+      <div class="row">
+        <input id="cq" type="search" autocomplete="off"
+          placeholder="เพิ่ม ICD-10 ที่จะเทียบ… พิมพ์รหัสหรือชื่อโรค (ใส่หลายรหัสคั่นด้วย , แล้วกด Enter ได้)">
+        <button id="btnPresetCodes">ชุดตัวอย่าง 19 รหัส</button>
+        <button id="btnClearCodes">ล้างรหัส</button>
+      </div>
+      <div id="chits"></div>
+      <div id="chips" class="chips"></div>
+      <p class="muted" style="margin:10px 0 0">
+        ตารางนี้มองรหัสที่เลือกในฐานะ<b>โรคร่วม/โรคแทรก (SDx)</b> — ตัวเลขคือ DCL ที่รหัสนั้นให้<b>เมื่ออยู่ใน DRG group ของแถวนั้น</b>
+        · คลิกหัวคอลัมน์เพื่อเรียงลำดับ · <span class="legend" style="display:inline-flex">
+        <span class="sw z">0</span><span class="sw h1">1</span><span class="sw h2">2</span>
+        <span class="sw h3">3</span><span class="sw h4">4</span><span class="sw h5">5</span>
+        · กรอบน้ำเงิน = ค่าสูงสุดของแถวนั้น</span></p>
+    </div>
+    <div class="card">
+      <div class="row">
+        <label style="display:flex;gap:6px;align-items:center">
+          <input type="checkbox" id="showAll"> แสดง DRG group ทุกกลุ่ม</label>
+        <input id="dcFilter" type="search" style="flex:1;min-width:180px;padding:8px 10px;font-size:14px;
+          border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink)"
+          placeholder="กรองแถว: รหัสกลุ่ม หรือชื่อกลุ่ม">
+        <button id="btnPresetDcs">ชุดกลุ่มตัวอย่าง 29 กลุ่ม</button>
+        <button id="btnAllDcs">ยกเลิกชุดกลุ่ม</button>
+        <button id="btnXlsxCmp" class="primary">Export ตาราง (.xlsx)</button>
+      </div>
+    </div>
+    <div id="cmpview"></div>
+  </section>
 </main>
 <script>
 const $ = s => document.querySelector(s);
@@ -171,8 +247,24 @@ document.addEventListener('pointerdown', e => {
 });
 addEventListener('hashchange', route);
 
+function setTab(t){
+  $('#pane-search').hidden = (t !== 'search');
+  $('#pane-cmp').hidden = (t !== 'cmp');
+  $('#tabs').querySelectorAll('button').forEach(b =>
+    b.setAttribute('aria-selected', String(b.dataset.tab === t)));
+}
+function go(hash){
+  if(location.hash.slice(1) === hash) route(); else location.hash = hash;
+}
+$('#tabs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  go(b.dataset.tab === 'cmp' ? cmpHash() : '');
+});
+
 function route(){
   const h = decodeURIComponent(location.hash.slice(1));
+  if(h === 'cmp' || h.startsWith('cmp/')){ setTab('cmp'); parseCmpHash(h); showCmp(); return; }
+  setTab('search');
   if(h.startsWith('dc/')) showDC(h.slice(3));
   else if(h.startsWith('code/')) showCode(h.slice(5));
   else $('#view').innerHTML = '';
@@ -275,7 +367,10 @@ async function showCode(code){
     <div class="card">
       <div class="row" style="justify-content:space-between">
         <h3 style="margin:0">ค่า DCL ของ ${esc(code)} ในทุก DRG group (${pairs.length} กลุ่ม)</h3>
-        <button id="btnXlsxCode">Export (.xlsx)</button>
+        <div class="row">
+          <button id="btnToCmp">+ เพิ่มเข้าตารางเทียบ</button>
+          <button id="btnXlsxCode">Export (.xlsx)</button>
+        </div>
       </div>
       ${pairs.length ? `<div class="scroll"><table><thead><tr><th>DC</th><th>ชื่อกลุ่ม</th><th>DCL</th></tr></thead>
         <tbody>${list}</tbody></table></div>`
@@ -284,7 +379,237 @@ async function showCode(code){
   const btn = $('#btnXlsxCode');
   if(btn) btn.onclick = () => exportXlsx(`ICD_${code}.xlsx`,
     [['ICD-10','DC','DC name','DCL'], ...pairs.map(([dc,d])=>[code,dc,DRG.dc[dc]?.name||'',+d])]);
+  const bc = $('#btnToCmp');
+  if(bc) bc.onclick = () => { if(!CMP.codes.includes(code)) CMP.codes.push(code); go(cmpHash()); };
 }
+
+/* ================= comorbid matrix (ICD-10 x DRG group -> DCL) ================= */
+/* The same code carries a different DCL in every DRG group, so comparing
+   near-synonym codes only makes sense as a cross-tab: rows = DRG group,
+   columns = the codes being compared, cell = DCL of that code in that group. */
+
+// column labels the user renamed, and the sample sets from หมอเกน's sheet
+const LABELS = (()=>{ try{ return JSON.parse(localStorage.getItem('cmpLabels')||'{}') }catch(e){ return {} } })();
+function saveLabels(){ try{ localStorage.setItem('cmpLabels', JSON.stringify(LABELS)) }catch(e){} }
+const labelOf = c => LABELS[c] || c;
+const descOf = c => BYCODE.get(c)?.d || DESC[c] || '';
+
+const PRESET_CODES = [['J189','Pneumonia'],['N390','UTI'],['N10','APN'],['J449','COPD 449'],
+  ['J441','COPD 441'],['A090','AGE'],['N185','CKD stage 5'],['I10','HT'],['B24','HIV'],
+  ['F102','Alc dependence'],['F050','Delirium'],['E440','mod malnutrition'],['K746','cirrhosis'],
+  ['E871','hypoNa'],['E876','HypoK'],['N179','AKI'],['J960','ac resp fail'],['E119','DM type 2'],
+  ['D509','IDA (D509)']];
+const PRESET_DCS = ['0153','0167','0351','0452','0455','0456','0459','0461','0462','0555','0560',
+  '0564','0650','0651','0657','0857','0858','0953','0956','0958','1050','1056','1154','1155',
+  '1158','1159','1853','1856','1858'];
+
+const CMP = { codes:[], dcs:null, showAll:false, filter:'', sortBy:'dc', sortDir:1 };
+
+function parseCmpHash(h){
+  const p = h.split('/');
+  CMP.codes = (p[1]||'').split(',').map(s=>s.trim().toUpperCase()).filter(Boolean);
+  CMP.dcs = p[2] ? p[2].split(',').map(s=>s.trim()).filter(Boolean) : null;
+}
+function cmpHash(){
+  let s = 'cmp/' + CMP.codes.join(',');
+  if(CMP.dcs && CMP.dcs.length) s += '/' + CMP.dcs.join(',');
+  return s;
+}
+
+/* ---- picking codes ---- */
+// searches the DCL table (7,219 codes), not MAIN: 666 codes carry a DCL as a
+// comorbidity but are not accepted as PDx, so the PDx-only index misses them
+async function cmpSearch(q){
+  q = q.trim().toUpperCase(); if(!q) return [];
+  const t = await dclTable(), out = [];
+  for(const c of Object.keys(t.codes)){
+    if(c.startsWith(q)) out.push(c);
+    else if(q.length > 2 && (descOf(c)||'').toUpperCase().includes(q)) out.push(c);
+    if(out.length > 40) break;
+  }
+  return out.slice(0,25);
+}
+function addCodes(str){
+  const parts = String(str).toUpperCase().split(/[^A-Z0-9]+/).filter(s=>/^[A-Z]\d{2,3}$/.test(s));
+  let added = 0;
+  for(const p of parts) if(!CMP.codes.includes(p)){ CMP.codes.push(p); added++; }
+  if(added) go(cmpHash());
+  return added;
+}
+$('#cq').addEventListener('input', async e => {
+  const v = e.target.value;
+  const hits = await cmpSearch(v);
+  if($('#cq').value !== v) return;                 // a newer keystroke already won
+  $('#chits').innerHTML = hits.map(c =>
+    `<div class="hit" data-k="${c}"><code>${esc(c)}</code> — ${esc(descOf(c))}</div>`).join('');
+});
+$('#cq').addEventListener('keydown', e => {
+  if(e.key !== 'Enter') return;
+  if(addCodes(e.target.value)){ e.target.value=''; $('#chits').innerHTML=''; }
+});
+$('#chits').addEventListener('pointerdown', e => {          // pointerdown: see note above
+  const el = e.target.closest('.hit'); if(!el) return;
+  e.preventDefault();
+  $('#cq').value = ''; $('#chits').innerHTML = '';
+  addCodes(el.dataset.k);
+});
+document.addEventListener('pointerdown', e => {
+  if(e.target.closest('#cq') || e.target.closest('#chits')) return;
+  $('#chits').innerHTML = '';
+});
+
+$('#btnPresetCodes').onclick = () => {
+  CMP.codes = PRESET_CODES.map(([c])=>c);
+  for(const [c,l] of PRESET_CODES) if(!LABELS[c]) LABELS[c] = l;
+  saveLabels(); go(cmpHash());
+};
+$('#btnClearCodes').onclick = () => { CMP.codes = []; go(cmpHash()); };
+$('#btnPresetDcs').onclick = () => { CMP.dcs = PRESET_DCS.slice(); go(cmpHash()); };
+$('#btnAllDcs').onclick = () => { CMP.dcs = null; go(cmpHash()); };
+$('#showAll').onchange = e => { CMP.showAll = e.target.checked; showCmp(); };
+$('#dcFilter').addEventListener('input', e => { CMP.filter = e.target.value; showCmp(); });
+
+// renamed inline rather than through prompt(), which a sandboxed iframe swallows
+let RENAMING = null;
+function renderChips(){
+  $('#chips').innerHTML = CMP.codes.map(c => {
+    if(c === RENAMING)
+      return `<span class="pill" data-c="${c}"><input class="ren" value="${esc(labelOf(c))}"`
+        + ` size="14" aria-label="ชื่อคอลัมน์ของ ${esc(c)}"><code>${esc(c)}</code></span>`;
+    const named = LABELS[c] && LABELS[c] !== c;
+    return `<span class="pill" data-c="${c}" title="${esc(descOf(c))}">`
+      + `<b>${esc(labelOf(c))}</b>${named?`<code>${esc(c)}</code>`:''}`
+      + `<button data-act="ren" title="ตั้งชื่อคอลัมน์">✎</button>`
+      + `<button data-act="del" title="เอาออก">✕</button></span>`;
+  }).join('');
+  const inp = $('#chips .ren');
+  if(inp){ inp.focus(); inp.select(); }
+}
+function commitRename(v){
+  const c = RENAMING; if(!c) return;
+  RENAMING = null;
+  if(v !== null){
+    const t = v.trim();
+    if(t && t !== c) LABELS[c] = t; else delete LABELS[c];
+    saveLabels();
+  }
+  showCmp();
+}
+$('#chips').addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  const c = b.closest('.pill').dataset.c;
+  if(b.dataset.act === 'del'){ CMP.codes = CMP.codes.filter(x=>x!==c); go(cmpHash()); return; }
+  RENAMING = c; renderChips();
+});
+$('#chips').addEventListener('keydown', e => {
+  if(!e.target.classList.contains('ren')) return;
+  if(e.key === 'Enter') commitRename(e.target.value);
+  else if(e.key === 'Escape') commitRename(null);
+});
+$('#chips').addEventListener('focusout', e => {
+  if(e.target.classList.contains('ren')) commitRename(e.target.value);
+});
+
+/* ---- the matrix ---- */
+let CMPROWS = null;                                  // last render, for export
+async function showCmp(){
+  renderChips();
+  $('#showAll').checked = CMP.showAll;
+  $('#showAll').disabled = !!(CMP.dcs && CMP.dcs.length);
+  const box = $('#cmpview');
+  if(!CMP.codes.length){
+    CMPROWS = null;
+    box.innerHTML = `<div class="card muted">ยังไม่ได้เลือก ICD-10 — พิมพ์รหัสหรือชื่อโรคในช่องด้านบน `
+      + `หรือกด <b>ชุดตัวอย่าง 19 รหัส</b> เพื่อดูตารางแบบเดียวกับในชีต</div>`;
+    return;
+  }
+  const t = await dclTable();
+  const idx = new Map(t.dcs.map((d,i)=>[d,i]));
+  const codes = CMP.codes;
+  const val = (c,dc) => { const s = t.codes[c], i = idx.get(dc); return (s && i !== undefined) ? +s[i] : 0; };
+
+  let dcs = (CMP.dcs && CMP.dcs.length)
+    ? CMP.dcs.filter(d => idx.has(d))
+    : t.dcs.filter(dc => CMP.showAll || codes.some(c => val(c,dc) > 0));
+  const f = CMP.filter.trim().toUpperCase();
+  if(f) dcs = dcs.filter(dc => dc.includes(f) || (DRG.dc[dc]?.name||'').toUpperCase().includes(f));
+
+  const rows = dcs.map(dc => {
+    const vals = codes.map(c => val(c,dc));
+    return { dc, vals, max: Math.max(...vals), sum: vals.reduce((a,b)=>a+b,0) };
+  });
+  const dir = CMP.sortDir;
+  if(CMP.sortBy === 'dc') rows.sort((a,b) => a.dc.localeCompare(b.dc)*dir);
+  else if(CMP.sortBy === 'sum') rows.sort((a,b) => (a.sum-b.sum)*dir || a.dc.localeCompare(b.dc));
+  else rows.sort((a,b) => (a.vals[CMP.sortBy]-b.vals[CMP.sortBy])*dir || a.dc.localeCompare(b.dc));
+  CMPROWS = rows;
+
+  const arrow = k => CMP.sortBy === k ? (CMP.sortDir>0?' ▲':' ▼') : '';
+  const head = `<tr><th class="dccell" data-s="dc">DRG group${arrow('dc')}</th>`
+    + codes.map((c,i) => {
+        const miss = !t.codes[c];
+        return `<th data-s="${i}" title="${esc(descOf(c))}${miss?' — ไม่มีในตาราง DCL':''}">`
+          + `<span class="colname">${esc(labelOf(c))}${miss?' ⚠':''}</span>`
+          + `<span class="colcode">${esc(c)}${arrow(i)}</span></th>`;
+      }).join('')
+    + `<th data-s="sum">รวม${arrow('sum')}</th></tr>`;
+
+  const body = rows.map(r =>
+    `<tr><td class="dccell" title="${esc(DRG.dc[r.dc]?.name||'')}"><a href="#dc/${r.dc}"><code>${r.dc}</code></a>`
+    + `<span class="dcname">${esc(DRG.dc[r.dc]?.name||'')}</span></td>`
+    + r.vals.map(v => `<td class="v ${v?'h'+v:'z'}${v && v===r.max?' max':''}">${v}</td>`).join('')
+    + `<td class="v z">${r.sum}</td></tr>`).join('');
+
+  // per-code summary over the rows actually on screen: "wins" = how often this
+  // code is the strongest of the set in a group -- the direct answer to
+  // "which of these near-synonyms is worth more?"
+  const stats = codes.map((c,i) => {
+    const vs = rows.map(r => r.vals[i]);
+    return { c, i,
+      max: vs.length ? Math.max(...vs) : 0,
+      avg: vs.length ? vs.reduce((a,b)=>a+b,0)/vs.length : 0,
+      pos: vs.filter(v=>v>0).length,
+      win: rows.filter(r => r.max>0 && r.vals[i]===r.max).length };
+  }).sort((a,b) => b.avg-a.avg || b.win-a.win);
+  const statRows = stats.map(s =>
+    `<tr><td><b>${esc(labelOf(s.c))}</b> <code>${s.c}</code><br>`
+    + `<span class="muted">${esc(descOf(s.c))}</span></td>`
+    + `<td>${dclSpan(s.max)}</td><td>${s.avg.toFixed(2)}</td>`
+    + `<td>${s.pos} / ${rows.length}</td><td>${s.win}</td></tr>`).join('');
+
+  const scope = (CMP.dcs && CMP.dcs.length) ? 'ชุดกลุ่มที่เลือกไว้'
+    : (CMP.showAll ? `ทุกกลุ่ม (${t.dcs.length})` : 'เฉพาะกลุ่มที่มีรหัสใดรหัสหนึ่งให้ DCL > 0');
+  box.innerHTML = `
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h3 style="margin:0">DRG group × ICD-10 → DCL <span class="muted">(${rows.length} กลุ่ม × ${codes.length} รหัส)</span></h3>
+        <span class="muted">แถวที่แสดง: ${esc(scope)}${f?` · กรอง "${esc(CMP.filter)}"`:''}</span>
+      </div>
+      <div class="mxwrap" style="margin-top:10px"><table class="mx"><thead>${head}</thead><tbody>${body}</tbody></table></div>
+      ${rows.length ? '' : '<p class="muted">ไม่มีแถวที่ตรงเงื่อนไข</p>'}
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 8px">สรุปเปรียบเทียบ <span class="muted">(คิดจาก ${rows.length} กลุ่มที่แสดงอยู่)</span></h3>
+      <div class="scroll"><table><thead><tr><th>ICD-10</th><th>DCL สูงสุด</th><th>DCL เฉลี่ย</th>
+        <th>กลุ่มที่ให้ DCL ≥ 1</th><th>กลุ่มที่เป็นตัวสูงสุด</th></tr></thead>
+        <tbody>${statRows}</tbody></table></div>
+      <p class="muted" style="margin:8px 0 0">"กลุ่มที่เป็นตัวสูงสุด" = จำนวนกลุ่มที่รหัสนี้ให้ DCL สูงที่สุดในบรรดารหัสที่เลือก (เสมอกันนับทุกตัว)</p>
+    </div>`;
+  box.querySelectorAll('thead th').forEach(th => th.addEventListener('click', () => {
+    const k = th.dataset.s === 'dc' || th.dataset.s === 'sum' ? th.dataset.s : +th.dataset.s;
+    if(CMP.sortBy === k) CMP.sortDir = -CMP.sortDir;
+    else { CMP.sortBy = k; CMP.sortDir = (k === 'dc') ? 1 : -1; }   // codes read best high-first
+    showCmp();
+  }));
+}
+
+$('#btnXlsxCmp').onclick = () => {
+  if(!CMPROWS) return;
+  const codes = CMP.codes;
+  const rows = [['DRG group','DC name', ...codes.map(c => labelOf(c)===c ? c : `${labelOf(c)} (${c})`), 'รวม']];
+  for(const r of CMPROWS) rows.push([r.dc, DRG.dc[r.dc]?.name||'', ...r.vals, r.sum]);
+  exportXlsx('Comorbid_DCL.xlsx', rows);
+};
 
 /* ---------- sheet builders ---------- */
 function dcSheet(dc){
