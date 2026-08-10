@@ -107,7 +107,7 @@ table.mx tfoot td.dccell{z-index:3}
 <main>
   <div class="tabs" id="tabs">
     <button data-tab="search" aria-selected="true">🔎 ค้นหารายรหัส / รายกลุ่ม</button>
-    <button data-tab="cmp" aria-selected="false">🧮 เทียบโรคร่วม (Comorbid DCL)</button>
+    <button data-tab="cmp" aria-selected="false">🧮 เทียบโรคร่วม (Comobid DCL)</button>
   </div>
 
   <section id="pane-search">
@@ -536,11 +536,10 @@ async function showCmp(){
 
   const rows = dcs.map(dc => {
     const vals = codes.map(c => val(c,dc));
-    return { dc, vals, max: Math.max(...vals), sum: vals.reduce((a,b)=>a+b,0) };
+    return { dc, vals, max: Math.max(...vals) };
   });
   const dir = CMP.sortDir;
   if(CMP.sortBy === 'dc') rows.sort((a,b) => a.dc.localeCompare(b.dc)*dir);
-  else if(CMP.sortBy === 'sum') rows.sort((a,b) => (a.sum-b.sum)*dir || a.dc.localeCompare(b.dc));
   else rows.sort((a,b) => (a.vals[CMP.sortBy]-b.vals[CMP.sortBy])*dir || a.dc.localeCompare(b.dc));
   CMPROWS = rows;
 
@@ -552,13 +551,13 @@ async function showCmp(){
           + `<span class="colname">${esc(labelOf(c))}${miss?' ⚠':''}</span>`
           + `<span class="colcode">${esc(c)}${arrow(i)}</span></th>`;
       }).join('')
-    + `<th data-s="sum">รวม${arrow('sum')}</th></tr>`;
+    + `</tr>`;
 
   const body = rows.map(r =>
     `<tr><td class="dccell" title="${esc(DRG.dc[r.dc]?.name||'')}"><a href="#dc/${r.dc}"><code>${r.dc}</code></a>`
     + `<span class="dcname">${esc(DRG.dc[r.dc]?.name||'')}</span></td>`
     + r.vals.map(v => `<td class="v ${v?'h'+v:'z'}${v && v===r.max?' max':''}">${v}</td>`).join('')
-    + `<td class="v z">${r.sum}</td></tr>`).join('');
+    + `</tr>`).join('');
 
   // per-code summary over the rows actually on screen: "wins" = how often this
   // code is the strongest of the set in a group -- the direct answer to
@@ -606,9 +605,9 @@ async function showCmp(){
 $('#btnXlsxCmp').onclick = () => {
   if(!CMPROWS) return;
   const codes = CMP.codes;
-  const rows = [['DRG group','DC name', ...codes.map(c => labelOf(c)===c ? c : `${labelOf(c)} (${c})`), 'รวม']];
-  for(const r of CMPROWS) rows.push([r.dc, DRG.dc[r.dc]?.name||'', ...r.vals, r.sum]);
-  exportXlsx('Comorbid_DCL.xlsx', rows);
+  const rows = [['DRG group','DC name', ...codes.map(c => labelOf(c)===c ? c : `${labelOf(c)} (${c})`)]];
+  for(const r of CMPROWS) rows.push([r.dc, DRG.dc[r.dc]?.name||'', ...r.vals]);
+  exportXlsx('Comobid_DCL.xlsx', rows);
 };
 
 /* ---------- sheet builders ---------- */
