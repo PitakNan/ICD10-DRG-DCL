@@ -9,21 +9,26 @@
   --bg:#f6f7f9; --panel:#fff; --ink:#16202c; --muted:#66798f; --line:#dde3ea;
   --accent:#1f4e79; --accent2:#4472c4; --chip:#eef3fa;
   --d0:#8c9bab; --d1:#2e7d32; --d2:#ef6c00; --d3:#c62828; --d4:#6a1b9a; --d5:#ad1457;
+  /* ink to put ON an accent/DCL fill. The dark theme lightens those fills, so
+     white text on them drops to ~1.9:1 -- there it has to flip to dark ink. */
+  --onaccent:#fff;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#11161c; --panel:#182029; --ink:#e8eef5; --muted:#93a4b8; --line:#2a3542;
   --accent:#7fb2e5; --accent2:#9dc1ea; --chip:#1e2935;
   --d0:#7d8b9a; --d1:#66bb6a; --d2:#ffa726; --d3:#ef5350; --d4:#ba68c8; --d5:#f06292;
+  --onaccent:#0d141b;
 }}
 :root[data-theme="dark"]{
   --bg:#11161c; --panel:#182029; --ink:#e8eef5; --muted:#93a4b8; --line:#2a3542;
   --accent:#7fb2e5; --accent2:#9dc1ea; --chip:#1e2935;
   --d0:#7d8b9a; --d1:#66bb6a; --d2:#ffa726; --d3:#ef5350; --d4:#ba68c8; --d5:#f06292;
+  --onaccent:#0d141b;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);
   font:15px/1.55 "Segoe UI","Sarabun",system-ui,sans-serif}
-header{background:var(--accent);color:#fff;padding:14px 18px}
+header{background:var(--accent);color:var(--onaccent);padding:14px 18px}
 header h1{margin:0;font-size:18px;font-weight:600}
 header p{margin:3px 0 0;font-size:12.5px;opacity:.85}
 main{max-width:1180px;margin:0 auto;padding:16px}
@@ -34,10 +39,10 @@ input[type=search]{flex:1;min-width:220px;padding:10px 12px;font-size:16px;
   border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink)}
 button{padding:9px 14px;border:1px solid var(--line);border-radius:8px;cursor:pointer;
   background:var(--chip);color:var(--ink);font-size:14px}
-button.primary{background:var(--accent2);border-color:var(--accent2);color:#fff}
+button.primary{background:var(--accent2);border-color:var(--accent2);color:var(--onaccent)}
 button:disabled{opacity:.5;cursor:default}
 .tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-.tabs button[aria-selected=true]{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.tabs button[aria-selected=true]{background:var(--accent2);border-color:var(--accent2);color:var(--onaccent)}
 table{border-collapse:collapse;width:100%;font-size:14px}
 th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
 th{background:var(--chip);font-weight:600;white-space:nowrap}
@@ -46,7 +51,7 @@ th{background:var(--chip);font-weight:600;white-space:nowrap}
 .chip{display:inline-block;background:var(--chip);border:1px solid var(--line);
   border-radius:6px;padding:1px 7px;margin:2px 3px 2px 0;font-size:13px;font-family:ui-monospace,monospace}
 .dcl{display:inline-block;min-width:22px;text-align:center;border-radius:5px;
-  color:#fff;padding:1px 6px;font-weight:600;font-size:12.5px}
+  color:var(--onaccent);padding:1px 6px;font-weight:600;font-size:12.5px}
 .d0{background:var(--d0)}.d1{background:var(--d1)}.d2{background:var(--d2)}
 .d3{background:var(--d3)}.d4{background:var(--d4)}.d5{background:var(--d5)}
 .hit{padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin:5px 0;cursor:pointer}
@@ -108,6 +113,7 @@ table.mx tfoot td.dccell{z-index:3}
   <div class="tabs" id="tabs">
     <button data-tab="search" aria-selected="true">🔎 ค้นหารายรหัส / รายกลุ่ม</button>
     <button data-tab="cmp" aria-selected="false">🧮 เทียบโรคร่วม (Comobid DCL)</button>
+    <button data-tab="rev" aria-selected="false">🔁 กลุ่มนี้มีอะไรเพิ่ม DCL บ้าง</button>
   </div>
 
   <section id="pane-search">
@@ -153,6 +159,29 @@ table.mx tfoot td.dccell{z-index:3}
     </div>
     <div id="cmpview"></div>
   </section>
+
+  <section id="pane-rev" hidden>
+    <div class="card">
+      <div class="row">
+        <input id="rq" type="search" autocomplete="off"
+          placeholder="เลือก DRG group… พิมพ์รหัสกลุ่ม (0155) หรือชื่อกลุ่ม (COPD)">
+        <button id="btnXlsxRev" class="primary">Export รายการนี้ (.xlsx)</button>
+      </div>
+      <div id="rhits"></div>
+      <p class="muted" style="margin:10px 0 0">
+        ตอบคำถาม “ถ้าผู้ป่วยอยู่ใน DRG group นี้ <b>มีรหัสโรคอะไรบ้างที่ใส่เป็นโรคร่วม/โรคแทรก (SDx) แล้วดัน DCL ขึ้น</b>”
+        — เป็นด้านกลับของแท็บเทียบโรคร่วม ใช้ไล่หา Dx ที่นึกไม่ถึง
+      </p>
+    </div>
+    <div class="card" id="rctl" hidden>
+      <!-- kept outside #revview so typing here doesn't lose focus on re-render -->
+      <input id="rFilter" type="search" autocomplete="off" style="width:100%;padding:8px 10px;font-size:14px;
+        border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink)"
+        placeholder="กรองในรายการ: รหัส ICD-10 หรือชื่อโรค">
+      <div class="row" id="rlevels" style="margin-top:10px"></div>
+    </div>
+    <div id="revview"></div>
+  </section>
 </main>
 <script>
 const $ = s => document.querySelector(s);
@@ -196,24 +225,41 @@ async function boot(){
   route();
 }
 
+// "any key": the query matches *anywhere* in the code or the name -- "440"
+// finds J440 and DRG group 0440, "pneumo" finds every pneumonia. Exact and
+// prefix hits still rank first so typing a whole code lands it at the top.
+// Dots/spaces are stripped on the code side only (J18.9 and "j 18 9" -> J189);
+// the name side keeps them, or "acute renal" would stop matching.
+const normCode = s => String(s).toUpperCase().replace(/[.\s-]/g, '');
+
 function search(q){
   q = q.trim().toUpperCase();
   if(!q) return [];
-  const out = [];
-  if(/^\d{3,4}$/.test(q)){
-    for(const dc of BYDC.keys()) if(dc.startsWith(q.padStart(4,'0')) || dc.startsWith(q))
-      out.push({t:'dc', k:dc, n:DRG.dc[dc]?.name||''});
+  const qc = normCode(q);
+  const out = [], seen = new Set();
+  const add = (t,k,n,r) => { const id = t+k; if(seen.has(id)) return; seen.add(id); out.push({t,k,n,r}); };
+  if(/^\d{1,4}$/.test(qc)){
+    const padded = qc.padStart(4,'0');
+    for(const dc of BYDC.keys()){
+      const i = dc.indexOf(qc);
+      if(dc === padded) add('dc', dc, DRG.dc[dc]?.name||'', 0);
+      else if(i >= 0) add('dc', dc, DRG.dc[dc]?.name||'', i===0 ? 1 : 2);
+    }
   }
   for(const r of MAIN){
-    if(r.c.startsWith(q)) out.push({t:'code', k:r.c, n:r.d});
-    else if(q.length>2 && (r.d||'').toUpperCase().includes(q)) out.push({t:'code', k:r.c, n:r.d});
-    if(out.length>60) break;
+    const i = qc ? r.c.indexOf(qc) : -1;
+    if(i >= 0){ add('code', r.c, r.d, r.c===qc ? 0 : (i===0 ? 1 : 3)); continue; }
+    if(q.length >= 2){
+      const j = (r.d||'').toUpperCase().indexOf(q);
+      if(j >= 0) add('code', r.c, r.d, j===0 ? 3 : 4);
+    }
   }
-  for(const dc of BYDC.keys()){
+  if(q.length >= 2) for(const dc of BYDC.keys()){
     const n = DRG.dc[dc]?.name || '';
-    if(q.length>2 && n.toUpperCase().includes(q)) out.push({t:'dc', k:dc, n});
-    if(out.length>80) break;
+    const j = n.toUpperCase().indexOf(q);
+    if(j >= 0) add('dc', dc, n, j===0 ? 3 : 4);
   }
+  out.sort((a,b) => a.r - b.r || a.k.localeCompare(b.k));
   return out.slice(0,40);
 }
 
@@ -247,9 +293,9 @@ document.addEventListener('pointerdown', e => {
 });
 addEventListener('hashchange', route);
 
+const PANES = ['search','cmp','rev'];
 function setTab(t){
-  $('#pane-search').hidden = (t !== 'search');
-  $('#pane-cmp').hidden = (t !== 'cmp');
+  for(const p of PANES) $('#pane-'+p).hidden = (p !== t);
   $('#tabs').querySelectorAll('button').forEach(b =>
     b.setAttribute('aria-selected', String(b.dataset.tab === t)));
 }
@@ -258,12 +304,18 @@ function go(hash){
 }
 $('#tabs').addEventListener('click', e => {
   const b = e.target.closest('button'); if(!b) return;
-  go(b.dataset.tab === 'cmp' ? cmpHash() : '');
+  go(b.dataset.tab === 'cmp' ? cmpHash() : b.dataset.tab === 'rev' ? revHash() : '');
 });
 
 function route(){
   const h = decodeURIComponent(location.hash.slice(1));
   if(h === 'cmp' || h.startsWith('cmp/')){ setTab('cmp'); parseCmpHash(h); showCmp(); return; }
+  if(h === 'rev' || h.startsWith('rev/')){
+    setTab('rev');
+    const dc = h.slice(4).trim();
+    if(dc && dc !== REV.dc){ REV.dc = dc; REV.filter = ''; REV.limit = REV.PAGE; $('#rFilter').value = ''; }
+    showRev(); return;
+  }
   setTab('search');
   if(h.startsWith('dc/')) showDC(h.slice(3));
   else if(h.startsWith('code/')) showCode(h.slice(5));
@@ -431,34 +483,48 @@ function cmpHash(){
 // a trailing "X" (as doctors write it, e.g. "F102X") is a wildcard for "and
 // whatever digit(s) follow" -- no real code ever contains a literal X, so it's
 // always safe to treat it as a prefix cut rather than a literal character
-function wildcardPrefix(q){ return q.includes('X') ? q.slice(0, q.indexOf('X')) : q; }
+// only a *trailing* X is a wildcard. Cutting at the first X instead turned a
+// bare "X" into an empty prefix that matched all 7,219 codes.
+function wildcardPrefix(q){ const m = /^([A-Z]\d{1,5})X+$/.exec(q); return m ? m[1] : q; }
 async function cmpSearch(q){
-  q = q.trim().toUpperCase(); if(!q) return [];
-  const qBase = wildcardPrefix(q);
+  const qd = q.trim().toUpperCase(); if(!qd) return [];
+  const qc = normCode(wildcardPrefix(qd));
   const t = await dclTable(), out = [];
   for(const c of Object.keys(t.codes)){
-    if(c.startsWith(qBase)) out.push(c);
-    else if(qBase.length > 2 && (descOf(c)||'').toUpperCase().includes(qBase)) out.push(c);
-    if(out.length > 40) break;
-  }
-  return out.slice(0,25);
-}
-async function addCodes(str){
-  const tokens = String(str).toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean);
-  const t = await dclTable();
-  let added = 0;
-  for(const tok of tokens){
-    if(/^[A-Z]\d{2,3}$/.test(tok)){
-      if(!CMP.codes.includes(tok)){ CMP.codes.push(tok); added++; }
-    }else if(tok.includes('X')){
-      const prefix = wildcardPrefix(tok);
-      if(!/^[A-Z]\d{1,4}$/.test(prefix)) continue;
-      for(const c of Object.keys(t.codes)){
-        if(c.startsWith(prefix) && !CMP.codes.includes(c)){ CMP.codes.push(c); added++; }
-      }
+    const i = qc ? c.indexOf(qc) : -1;
+    if(i >= 0){ out.push([c, c===qc ? 0 : (i===0 ? 1 : 2)]); continue; }
+    if(qd.length >= 2){
+      const j = (descOf(c)||'').toUpperCase().indexOf(qd);
+      if(j >= 0) out.push([c, j===0 ? 3 : 4]);
     }
   }
-  if(added) go(cmpHash());
+  out.sort((a,b) => a[1]-b[1] || a[0].localeCompare(b[0]));
+  return out.slice(0,25).map(x => x[0]);
+}
+let IGNORED = [];                       // tokens the last add couldn't read, to report
+async function addCodes(str){
+  const t = await dclTable();
+  // "." stays inside a token: splitting on it turned J18.9 into J18 + 9 and
+  // silently added the wrong (empty) column instead of J189
+  const tokens = String(str).toUpperCase().split(/[^A-Z0-9.]+/).filter(Boolean);
+  let added = 0; IGNORED = [];
+  for(const raw of tokens){
+    const tok = normCode(raw);
+    const w = /^([A-Z]\d{1,5})X+$/.exec(tok);
+    if(w){
+      let n = 0;
+      for(const c of Object.keys(t.codes)) if(c.startsWith(w[1])){
+        n++; if(!CMP.codes.includes(c)){ CMP.codes.push(c); added++; }
+      }
+      if(!n) IGNORED.push(raw);
+    // \d{2,5} covers every real code shape (3-6 chars). The old {2,3} silently
+    // dropped all 2,616 five- and six-character codes -- clicking a suggestion
+    // for one of them did nothing at all.
+    }else if(/^[A-Z]\d{2,5}$/.test(tok)){
+      if(!CMP.codes.includes(tok)){ CMP.codes.push(tok); added++; }
+    }else if(tok) IGNORED.push(raw);
+  }
+  if(added) go(cmpHash()); else if(IGNORED.length) renderChips();
   return added;
 }
 $('#cq').addEventListener('input', async e => {
@@ -507,7 +573,10 @@ function renderChips(){
       + `<b>${esc(labelOf(c))}</b>${named?`<code>${esc(c)}</code>`:''}`
       + `<button data-act="ren" title="ตั้งชื่อคอลัมน์">✎</button>`
       + `<button data-act="del" title="เอาออก">✕</button></span>`;
-  }).join('');
+  }).join('') + (IGNORED.length
+    ? `<span class="pill missing" title="อ่านไม่ออกว่าเป็นรหัส ICD-10 — รูปแบบที่รับคือตัวอักษร 1 ตัว + ตัวเลข 2-5 หลัก เช่น N10, J189, B1810">`
+      + `⚠ ข้ามไป: ${esc(IGNORED.join(', '))}</span>`
+    : '');
   const inp = $('#chips .ren');
   if(inp){ inp.focus(); inp.select(); }
 }
@@ -552,8 +621,14 @@ async function showCmp(){
   const t = await dclTable();
   const idx = new Map(t.dcs.map((d,i)=>[d,i]));
   const codes = CMP.codes;
+  // a column index left over from a wider set would sort on vals[i] === undefined,
+  // which degrades to an unsorted table with the arrow shown on no column at all
+  if(typeof CMP.sortBy === 'number' && !(CMP.sortBy >= 0 && CMP.sortBy < codes.length)){
+    CMP.sortBy = 'dc'; CMP.sortDir = 1;
+  }
   const val = (c,dc) => { const s = t.codes[c], i = idx.get(dc); return (s && i !== undefined) ? +s[i] : 0; };
 
+  const dropped = (CMP.dcs && CMP.dcs.length) ? CMP.dcs.filter(d => !idx.has(d)) : [];
   let dcs = (CMP.dcs && CMP.dcs.length)
     ? CMP.dcs.filter(d => idx.has(d))
     : t.dcs.filter(dc => CMP.showAll || codes.some(c => val(c,dc) > 0));
@@ -616,6 +691,9 @@ async function showCmp(){
           ? ` — "${esc(CMP.filter)}" ดูเหมือนรหัส ICD-10 ช่องนี้กรอง<b>แถว DRG group</b>เท่านั้น ถ้าต้องการเพิ่มรหัสนี้มาเปรียบเทียบ ให้พิมพ์ในช่อง "เพิ่ม ICD-10 ที่จะเทียบ" ด้านบนแทน`
           : ''
       }</p>`}
+      ${dropped.length ? `<p class="muted" style="margin:8px 0 0">ชุดกลุ่มที่เลือกไว้มี ${(CMP.dcs||[]).length} กลุ่ม
+        แต่แสดงได้ ${dcs.length} กลุ่ม — อีก ${dropped.length} กลุ่มไม่มีรหัสโรคใดให้ค่า DCL เลยจึงไม่มีข้อมูลจะแสดง:
+        ${dropped.map(d=>`<code>${esc(d)}</code> ${esc(DRG.dc[d]?.name||'')}`).join(' · ')}</p>` : ''}
     </div>
     <div class="card">
       <h3 style="margin:0 0 8px">สรุปเปรียบเทียบ <span class="muted">(คิดจาก ${rows.length} กลุ่มที่แสดงอยู่)</span></h3>
@@ -624,8 +702,10 @@ async function showCmp(){
         <tbody>${statRows}</tbody></table></div>
       <p class="muted" style="margin:8px 0 0">"กลุ่มที่เป็นตัวสูงสุด" = จำนวนกลุ่มที่รหัสนี้ให้ DCL สูงที่สุดในบรรดารหัสที่เลือก (เสมอกันนับทุกตัว)</p>
     </div>`;
-  box.querySelectorAll('thead th').forEach(th => th.addEventListener('click', () => {
-    const k = th.dataset.s === 'dc' || th.dataset.s === 'sum' ? th.dataset.s : +th.dataset.s;
+  // scope to the matrix: the summary table below has thead th's with no data-s,
+  // so clicking one set sortBy = NaN and silently killed the matrix sort
+  box.querySelectorAll('table.mx thead th').forEach(th => th.addEventListener('click', () => {
+    const k = th.dataset.s === 'dc' ? 'dc' : +th.dataset.s;
     if(CMP.sortBy === k) CMP.sortDir = -CMP.sortDir;
     else { CMP.sortBy = k; CMP.sortDir = (k === 'dc') ? 1 : -1; }   // codes read best high-first
     showCmp();
@@ -638,6 +718,142 @@ $('#btnXlsxCmp').onclick = () => {
   const rows = [['DRG group','DC name', ...codes.map(c => labelOf(c)===c ? c : `${labelOf(c)} (${c})`)]];
   for(const r of CMPROWS) rows.push([r.dc, DRG.dc[r.dc]?.name||'', ...r.vals]);
   exportXlsx('Comobid_DCL.xlsx', rows);
+};
+
+/* ============ reverse view: DRG group -> the codes that raise its DCL ============ */
+/* "กดเป็น DRG แล้วขึ้นมาว่ามีรหัสโรคอะไรบ้างที่เพิ่ม DCL ให้กลุ่มโรคนี้" — the mirror
+   image of the comorbid matrix. Every group has thousands of contributors
+   (median 6,175 of 7,219 codes), so an unfiltered dump is unreadable: DCL 3-5
+   is the rare, worth-hunting end (median 357 per group) and is the default. */
+const REV = { dc:null, levels:new Set([5,4,3]), filter:'', limit:300, PAGE:300 };
+let REVROWS = [];                                   // last render, for export
+
+function revHash(){ return 'rev' + (REV.dc ? '/' + REV.dc : ''); }
+
+async function revSearch(q){
+  const qd = q.trim().toUpperCase(); if(!qd) return [];
+  const qc = normCode(qd);
+  const numeric = /^\d{1,4}$/.test(qc);
+  const padded = numeric ? qc.padStart(4,'0') : '';
+  const t = await dclTable(), out = [];
+  for(const dc of t.dcs){
+    const n = DRG.dc[dc]?.name || '';
+    const i = numeric ? dc.indexOf(qc) : -1;
+    if(i >= 0){ out.push([dc, n, dc===padded ? 0 : (i===0 ? 1 : 2)]); continue; }
+    if(qd.length >= 2){
+      const j = n.toUpperCase().indexOf(qd);
+      if(j >= 0) out.push([dc, n, j===0 ? 3 : 4]);
+    }
+  }
+  out.sort((a,b) => a[2]-b[2] || a[0].localeCompare(b[0]));
+  return out.slice(0,30);
+}
+$('#rq').addEventListener('input', async e => {
+  const v = e.target.value;
+  const hits = await revSearch(v);
+  if($('#rq').value !== v) return;                 // a newer keystroke already won
+  $('#rhits').innerHTML = hits.map(([dc,n]) =>
+    `<div class="hit" data-k="${dc}"><code>${esc(dc)}</code> <span class="muted">DRG group</span> — ${esc(n)}</div>`).join('');
+});
+$('#rhits').addEventListener('pointerdown', e => {  // pointerdown: see note above
+  const el = e.target.closest('.hit'); if(!el) return;
+  e.preventDefault();
+  $('#rq').value = ''; $('#rhits').innerHTML = '';
+  go('rev/' + el.dataset.k);
+});
+document.addEventListener('pointerdown', e => {
+  if(e.target.closest('#rq') || e.target.closest('#rhits')) return;
+  $('#rhits').innerHTML = '';
+});
+$('#rFilter').addEventListener('input', e => { REV.filter = e.target.value; REV.limit = REV.PAGE; showRev(); });
+$('#rlevels').addEventListener('click', e => {
+  const b = e.target.closest('button[data-lv]'); if(!b) return;
+  const lv = +b.dataset.lv;
+  if(REV.levels.has(lv)) REV.levels.delete(lv); else REV.levels.add(lv);
+  REV.limit = REV.PAGE; showRev();
+});
+
+async function showRev(){
+  const box = $('#revview');
+  $('#rctl').hidden = !REV.dc;
+  if(!REV.dc){
+    REVROWS = [];
+    box.innerHTML = `<div class="card muted">ยังไม่ได้เลือก DRG group — พิมพ์รหัสกลุ่มหรือชื่อกลุ่มในช่องด้านบน `
+      + `(ลองกลุ่ม <a href="#rev/0155">0155</a> ตามตัวอย่าง)</div>`;
+    return;
+  }
+  const t = await dclTable();
+  const i = t.dcs.indexOf(REV.dc);
+  const info = DRG.dc[REV.dc];
+  if(i < 0){
+    REVROWS = []; $('#rlevels').innerHTML = '';
+    box.innerHTML = `<div class="card"><h3 style="margin:0 0 6px">DRG group <code>${esc(REV.dc)}</code>
+      <span class="muted">${esc(info?.name||'')}</span></h3>
+      <p class="muted" style="margin:0">${info ? 'ไม่มีรหัสโรคใดให้ค่า DCL กับกลุ่มนี้เลย — กลุ่มนี้จึงไม่มีข้อมูลโรคร่วมให้แสดง'
+        : 'ไม่พบ DRG group นี้'}</p></div>`;
+    return;
+  }
+  const all = [], cnt = [0,0,0,0,0,0];
+  for(const c of Object.keys(t.codes)){
+    const d = +t.codes[c][i];
+    if(d > 0){ all.push([c,d]); cnt[d]++; }
+  }
+  let rows = all.filter(([,d]) => REV.levels.has(d));
+  const fRaw = REV.filter.trim(), f = fRaw.toUpperCase(), fc = normCode(fRaw);
+  if(f) rows = rows.filter(([c]) => c.includes(fc) || (descOf(c)||'').toUpperCase().includes(f));
+  rows.sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0]));
+  REVROWS = rows;
+
+  $('#rlevels').innerHTML = `<span class="muted">แสดงเฉพาะ DCL:</span>`
+    + [5,4,3,2,1].map(lv => `<button data-lv="${lv}"${REV.levels.has(lv)?' class="primary"':''}`
+        + `${cnt[lv]?'':' disabled'}>${lv} <span style="opacity:.75">(${cnt[lv].toLocaleString()})</span></button>`).join('')
+    + `<span class="muted">· DCL 4–5 คือของหายากที่มักนึกไม่ถึง</span>`;
+
+  const shown = rows.slice(0, REV.limit);
+  const body = shown.map(([c,d]) => {
+    const r = BYCODE.get(c);
+    const pdx = r
+      ? (r.dc ? `<a href="#dc/${r.dc}"><code>${r.dc}</code></a>${r.dc===REV.dc?' <span class="muted">(กลุ่มเดียวกัน)</span>':''}`
+              : '<span class="muted">—</span>')
+      : '<span class="muted">ใช้เป็น PDx ไม่ได้</span>';
+    return `<tr><td>${dclSpan(d)}</td><td><a href="#code/${c}"><code>${esc(c)}</code></a></td>`
+      + `<td>${esc(descOf(c))}</td><td>${pdx}</td></tr>`;
+  }).join('');
+
+  box.innerHTML = `
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h3 style="margin:0">รหัสที่เพิ่ม DCL ให้กลุ่ม <code>${esc(REV.dc)}</code>
+          <span class="muted">${esc(info?.name||'')}</span></h3>
+        <a href="#dc/${esc(REV.dc)}">ดูรายละเอียดกลุ่ม + PDx ของกลุ่มนี้ →</a>
+      </div>
+      <p class="muted" style="margin:6px 0 10px">แสดง <b>${shown.length.toLocaleString()}</b> จาก
+        ${rows.length.toLocaleString()} รหัสที่ตรงเงื่อนไข · ทั้งกลุ่มมี ${all.length.toLocaleString()} รหัส
+        ที่ให้ DCL &gt; 0 (จาก ${Object.keys(t.codes).length.toLocaleString()} รหัสในตาราง DCL)${
+        f ? ` · กรอง "${esc(fRaw)}"` : ''}</p>
+      ${rows.length
+        ? `<div class="scroll"><table><thead><tr><th>DCL</th><th>ICD-10</th><th>คำอธิบาย</th>
+            <th>เป็น PDx ของกลุ่ม</th></tr></thead><tbody>${body}</tbody></table></div>`
+        : `<p class="muted">ไม่มีรหัสที่ตรงเงื่อนไข — ${REV.levels.size ? 'ลองเปิดระดับ DCL เพิ่ม หรือล้างคำกรอง' : 'ยังไม่ได้เลือกระดับ DCL เลย'}</p>`}
+      ${rows.length > shown.length
+        ? `<div class="row" style="margin-top:10px">
+            <button id="btnRevMore">แสดงเพิ่มอีก ${Math.min(REV.PAGE, rows.length-shown.length).toLocaleString()} รหัส</button>
+            <button id="btnRevAll">แสดงทั้งหมด ${rows.length.toLocaleString()} รหัส</button></div>`
+        : ''}
+    </div>`;
+  const more = $('#btnRevMore'); if(more) more.onclick = () => { REV.limit += REV.PAGE; showRev(); };
+  const allb = $('#btnRevAll'); if(allb) allb.onclick = () => { REV.limit = Infinity; showRev(); };
+}
+
+$('#btnXlsxRev').onclick = () => {
+  if(!REV.dc || !REVROWS.length) return;
+  const name = DRG.dc[REV.dc]?.name || '';
+  const rows = [['DRG group','DC name','DCL','ICD-10','คำอธิบาย','เป็น PDx ของกลุ่ม']];
+  for(const [c,d] of REVROWS){
+    const r = BYCODE.get(c);
+    rows.push([REV.dc, name, d, c, descOf(c), r ? (r.dc||'') : 'ใช้เป็น PDx ไม่ได้']);
+  }
+  exportXlsx(`DRG_${REV.dc}_comorbid.xlsx`, rows);
 };
 
 /* ---------- sheet builders ---------- */
