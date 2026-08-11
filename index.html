@@ -910,7 +910,9 @@ async function showRevSummary(){
   let rows = codes.map(c => {
     const s = t.codes[c];
     const vals = scopeIdx.map(i => +s[i]).filter(v => v > 0);
-    return vals.length ? { c, max: Math.max(...vals), avg: vals.reduce((a,b)=>a+b,0)/vals.length, n: vals.length } : null;
+    if(!vals.length) return null;
+    const sum = vals.reduce((a,b)=>a+b,0);
+    return { c, max: Math.max(...vals), avg: sum/vals.length, avgAll: sum/scopeDcs.length, n: vals.length };
   }).filter(Boolean);
   const dir = REV.sortDir;
   if(REV.sortBy === 'code') rows.sort((a,b) => a.c.localeCompare(b.c)*dir);
@@ -926,7 +928,7 @@ async function showRevSummary(){
     + `<select id="rChapter" style="margin-left:4px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink)">`
     + `<option value="ALL"${REV.chapter==='ALL'?' selected':''}>ทุกหมวด ICD-10</option>`
     + CHAPTERS.map(c => `<option value="${c.key}"${REV.chapter===c.key?' selected':''}>${esc(c.label)}</option>`).join('')
-    + `</select><span class="muted">· เฉลี่ยเฉพาะกลุ่มที่รหัสนั้นให้ DCL ≥ 1 (ไม่นับกลุ่มที่ให้ 0 ถ่วงลง)</span>`;
+    + `</select><span class="muted">· "DCL เฉลี่ย" หารด้วยเฉพาะกลุ่มที่ให้ DCL ≥ 1 · "DCL เฉลี่ย (นับทุกกลุ่ม)" หารด้วยทุกกลุ่มในขอบเขต (กลุ่มที่ให้ 0 ถ่วงลง)</span>`;
 
   const arrow = k => REV.sortBy===k ? (REV.sortDir>0?' ▲':' ▼') : '';
   const shown = rows.slice(0, REV.limit);
@@ -934,6 +936,7 @@ async function showRevSummary(){
       <td><a href="#code/${r.c}"><code>${esc(r.c)}</code></a></td>
       <td class="icd">${esc(descOf(r.c))}</td>
       <td>${r.avg.toFixed(2)}</td>
+      <td>${r.avgAll.toFixed(2)}</td>
       <td>${dclSpan(r.max)}</td>
       <td>${r.n.toLocaleString()} / ${scopeDcs.length.toLocaleString()}</td>
     </tr>`).join('');
@@ -946,7 +949,7 @@ async function showRevSummary(){
         · คลิกหัวคอลัมน์ ICD-10 หรือ DCL เฉลี่ย เพื่อเรียงลำดับ · พิมพ์รหัสกลุ่ม DRG ด้านบนเพื่อดูรายละเอียดเฉพาะกลุ่มแทน</p>
       ${rows.length ? `<div class="mxwrap"><table class="summarytable"><thead><tr>
           <th data-s="code">ICD-10${arrow('code')}</th><th>คำอธิบาย</th>
-          <th data-s="avg">DCL เฉลี่ย${arrow('avg')}</th><th>DCL สูงสุด</th><th>กลุ่มที่ให้ DCL ≥ 1</th></tr></thead>
+          <th data-s="avg">DCL เฉลี่ย${arrow('avg')}</th><th>DCL เฉลี่ย (นับทุกกลุ่ม)</th><th>DCL สูงสุด</th><th>กลุ่มที่ให้ DCL ≥ 1</th></tr></thead>
           <tbody>${body}</tbody></table></div>`
         : '<p class="muted">ไม่มีรหัสที่ตรงเงื่อนไข</p>'}
       ${rows.length > shown.length
@@ -978,8 +981,8 @@ $('#btnXlsxRev').onclick = () => {
     for(const [c,d] of REVROWS) rows.push([REV.dc, name, d, c, descOf(c), pdxText(BYCODE.get(c))]);
     exportXlsx(`DRG_${REV.dc}_comorbid.xlsx`, rows);
   } else {
-    const rows = [['ICD-10','คำอธิบาย','DCL เฉลี่ย','DCL สูงสุด','กลุ่มที่ให้ DCL>=1']];
-    for(const r of REVROWS) rows.push([r.c, descOf(r.c), +r.avg.toFixed(2), r.max, r.n]);
+    const rows = [['ICD-10','คำอธิบาย','DCL เฉลี่ย','DCL เฉลี่ย (นับทุกกลุ่ม)','DCL สูงสุด','กลุ่มที่ให้ DCL>=1']];
+    for(const r of REVROWS) rows.push([r.c, descOf(r.c), +r.avg.toFixed(2), +r.avgAll.toFixed(2), r.max, r.n]);
     exportXlsx('ICD10_DCL_summary.xlsx', rows);
   }
 };
