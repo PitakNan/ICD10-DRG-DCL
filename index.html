@@ -46,6 +46,7 @@ button:disabled{opacity:.5;cursor:default}
 table{border-collapse:collapse;width:100%;font-size:14px}
 th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
 th{background:var(--chip);font-weight:600;white-space:nowrap}
+th[data-s]{cursor:pointer}
 .scroll{overflow-x:auto}
 .muted{color:var(--muted);font-size:13px}
 .chip{display:inline-block;background:var(--chip);border:1px solid var(--line);
@@ -399,11 +400,19 @@ async function dclPairs(code){
   return out;
 }
 
+const CODEVIEW = { sortBy:'dc', sortDir:1 };
 async function showCode(code){
   const r = BYCODE.get(code);
   const pairs = await dclPairs(code);
   const inOwn = r && r.dc ? (pairs.find(p=>p[0]===r.dc)?.[1] ?? 0) : null;
-  const list = pairs.map(([dc,d]) =>
+  const codeSortCmp = {
+    dc: (a,b) => a[0].localeCompare(b[0]),
+    name: (a,b) => (DRG.dc[a[0]]?.name||'').localeCompare(DRG.dc[b[0]]?.name||''),
+    dcl: (a,b) => (+a[1])-(+b[1]),
+  }[CODEVIEW.sortBy] || ((a,b) => a[0].localeCompare(b[0]));
+  const sorted = pairs.slice().sort((a,b) => codeSortCmp(a,b)*CODEVIEW.sortDir || a[0].localeCompare(b[0]));
+  const arrowCode = k => CODEVIEW.sortBy===k ? (CODEVIEW.sortDir>0?' ▲':' ▼') : '';
+  const list = sorted.map(([dc,d]) =>
     `<tr><td><a href="#dc/${dc}"><code>${dc}</code></a></td>`
     + `<td>${esc(DRG.dc[dc]?.name||'')}</td><td>${dclSpan(d)}</td></tr>`).join('');
   $('#view').innerHTML = `
@@ -430,13 +439,19 @@ async function showCode(code){
           <button id="btnXlsxCode">Export (.xlsx)</button>
         </div>
       </div>
-      ${pairs.length ? `<div class="scroll"><table><thead><tr><th>DC</th><th>ชื่อกลุ่ม</th><th>DCL</th></tr></thead>
+      ${pairs.length ? `<div class="scroll"><table class="codetable"><thead><tr><th data-s="dc">DC${arrowCode('dc')}</th><th data-s="name">ชื่อกลุ่ม${arrowCode('name')}</th><th data-s="dcl">DCL${arrowCode('dcl')}</th></tr></thead>
         <tbody>${list}</tbody></table></div>`
         : '<p class="muted">รหัสนี้ให้ DCL = 0 ในทุก DRG group (ไม่ปรากฏในตาราง DCL)</p>'}
     </div>`;
+  $('#view').querySelectorAll('table.codetable thead th[data-s]').forEach(th => th.addEventListener('click', () => {
+    const k = th.dataset.s;
+    if(CODEVIEW.sortBy === k) CODEVIEW.sortDir = -CODEVIEW.sortDir;
+    else { CODEVIEW.sortBy = k; CODEVIEW.sortDir = (k === 'dcl') ? -1 : 1; }
+    showCode(code);
+  }));
   const btn = $('#btnXlsxCode');
   if(btn) btn.onclick = () => exportXlsx(`ICD_${code}.xlsx`,
-    [['ICD-10','DC','DC name','DCL'], ...pairs.map(([dc,d])=>[code,dc,DRG.dc[dc]?.name||'',+d])]);
+    [['ICD-10','DC','DC name','DCL'], ...sorted.map(([dc,d])=>[code,dc,DRG.dc[dc]?.name||'',+d])]);
   const bc = $('#btnToCmp');
   if(bc) bc.onclick = () => { if(!CMP.codes.includes(code)) CMP.codes.push(code); go(cmpHash()); };
 }
@@ -470,7 +485,7 @@ const PRESET_DCS = ['0153', '0155', '0163', '0164', '0167', '0176', '0250', '031
   '2052', '2150', '2152', '2153', '2154', '2155', '2156', '2251', '2252', '2351', '2353',
   '2354', '2552'];
 
-const CMP = { codes:[], dcs:null, showAll:false, filter:'', sortBy:'dc', sortDir:1 };
+const CMP = { codes:[], dcs:null, showAll:false, filter:'', sortBy:'dc', sortDir:1, statSortBy:'avg', statSortDir:-1 };
 
 function parseCmpHash(h){
   const p = h.split('/');
@@ -676,7 +691,16 @@ async function showCmp(){
       avg: vs.length ? vs.reduce((a,b)=>a+b,0)/vs.length : 0,
       pos: vs.filter(v=>v>0).length,
       win: rows.filter(r => r.max>0 && r.vals[i]===r.max).length };
-  }).sort((a,b) => b.avg-a.avg || b.win-a.win);
+  });
+  const statSortCmp = {
+    code: (a,b) => a.c.localeCompare(b.c),
+    max: (a,b) => a.max-b.max,
+    avg: (a,b) => a.avg-b.avg,
+    pos: (a,b) => a.pos-b.pos,
+    win: (a,b) => a.win-b.win,
+  }[CMP.statSortBy] || ((a,b) => a.avg-b.avg);
+  stats.sort((a,b) => statSortCmp(a,b)*CMP.statSortDir || a.c.localeCompare(b.c));
+  const arrowStat = k => CMP.statSortBy===k ? (CMP.statSortDir>0?' ▲':' ▼') : '';
   const statRows = stats.map(s =>
     `<tr><td><b>${esc(labelOf(s.c))}</b> <code>${s.c}</code><br>`
     + `<span class="muted">${esc(descOf(s.c))}</span></td>`
@@ -703,13 +727,18 @@ async function showCmp(){
     </div>
     <div class="card">
       <h3 style="margin:0 0 8px">สรุปเปรียบเทียบ <span class="muted">(คิดจาก ${rows.length} กลุ่มที่แสดงอยู่)</span></h3>
-      <div class="scroll"><table><thead><tr><th>ICD-10</th><th>DCL สูงสุด</th><th>DCL เฉลี่ย</th>
-        <th>กลุ่มที่ให้ DCL ≥ 1</th><th>กลุ่มที่เป็นตัวสูงสุด</th></tr></thead>
+      <div class="scroll"><table class="stattable"><thead><tr><th data-s="code">ICD-10${arrowStat('code')}</th><th data-s="max">DCL สูงสุด${arrowStat('max')}</th><th data-s="avg">DCL เฉลี่ย${arrowStat('avg')}</th>
+        <th data-s="pos">กลุ่มที่ให้ DCL ≥ 1${arrowStat('pos')}</th><th data-s="win">กลุ่มที่เป็นตัวสูงสุด${arrowStat('win')}</th></tr></thead>
         <tbody>${statRows}</tbody></table></div>
       <p class="muted" style="margin:8px 0 0">"กลุ่มที่เป็นตัวสูงสุด" = จำนวนกลุ่มที่รหัสนี้ให้ DCL สูงที่สุดในบรรดารหัสที่เลือก (เสมอกันนับทุกตัว)</p>
     </div>`;
-  // scope to the matrix: the summary table below has thead th's with no data-s,
-  // so clicking one set sortBy = NaN and silently killed the matrix sort
+  // scoped by class so the two tables' data-s namespaces (column index vs stat key) don't collide
+  box.querySelectorAll('table.stattable thead th[data-s]').forEach(th => th.addEventListener('click', () => {
+    const k = th.dataset.s;
+    if(CMP.statSortBy === k) CMP.statSortDir = -CMP.statSortDir;
+    else { CMP.statSortBy = k; CMP.statSortDir = (k === 'code') ? 1 : -1; }
+    showCmp();
+  }));
   box.querySelectorAll('table.mx thead th').forEach(th => th.addEventListener('click', () => {
     const k = th.dataset.s === 'dc' ? 'dc' : +th.dataset.s;
     if(CMP.sortBy === k) CMP.sortDir = -CMP.sortDir;
