@@ -96,6 +96,11 @@ table.mx tfoot td{background:var(--chip);font-size:12px;position:sticky;bottom:0
 table.mx tfoot td.dccell{z-index:3}
 .colname{display:block;font-weight:600}
 .colcode{display:block;font-size:11px;color:var(--muted);font-weight:400}
+table.summarytable{border-collapse:collapse;font-size:13px;width:100%}
+table.summarytable th,table.summarytable td{border-bottom:1px solid var(--line);padding:6px 8px;white-space:nowrap}
+table.summarytable thead th{position:sticky;top:0;z-index:2;background:var(--chip);
+  cursor:pointer;text-align:left}
+table.summarytable td.icd{white-space:normal;color:var(--muted)}
 /* one line + ellipsis: a 29x19 grid is unreadable if group names wrap to 3 lines */
 .dcname{display:block;font-size:11.5px;color:var(--muted);font-weight:400;
   max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -164,13 +169,14 @@ table.mx tfoot td.dccell{z-index:3}
     <div class="card">
       <div class="row">
         <input id="rq" type="search" autocomplete="off"
-          placeholder="เลือก DRG group… พิมพ์รหัสกลุ่ม (0155) หรือชื่อกลุ่ม (COPD)">
+          placeholder="พิมพ์รหัสกลุ่ม (0155) หรือชื่อกลุ่ม (COPD) เพื่อดูเฉพาะกลุ่มนั้น — ไม่พิมพ์อะไรจะเห็นสรุปทุกรหัสรวมด้านล่าง">
         <button id="btnXlsxRev" class="primary">Export รายการนี้ (.xlsx)</button>
       </div>
       <div id="rhits"></div>
       <p class="muted" style="margin:10px 0 0">
         ตอบคำถาม “ถ้าผู้ป่วยอยู่ใน DRG group นี้ <b>มีรหัสโรคอะไรบ้างที่ใส่เป็นโรคร่วม/โรคแทรก (SDx) แล้วดัน DCL ขึ้น</b>”
-        — เป็นด้านกลับของแท็บเทียบโรคร่วม ใช้ไล่หา Dx ที่นึกไม่ถึง
+        — เป็นด้านกลับของแท็บเทียบโรคร่วม ใช้ไล่หา Dx ที่นึกไม่ถึง ·
+        ไม่เลือกกลุ่มไว้ = ดูภาพสรุปเฉลี่ย DCL ของทุกรหัส ICD-10 ข้ามทุกกลุ่ม (หรือชุดตัวอย่าง) เรียงลำดับ/กรองหมวดได้
       </p>
     </div>
     <div class="card" id="rctl" hidden>
@@ -313,7 +319,7 @@ function route(){
   if(h === 'rev' || h.startsWith('rev/')){
     setTab('rev');
     const dc = h.slice(4).trim();
-    if(dc && dc !== REV.dc){ REV.dc = dc; REV.filter = ''; REV.limit = REV.PAGE; $('#rFilter').value = ''; }
+    if(dc !== REV.dc){ REV.dc = dc || null; REV.filter = ''; REV.limit = REV.PAGE; $('#rFilter').value = ''; }
     showRev(); return;
   }
   setTab('search');
@@ -725,8 +731,26 @@ $('#btnXlsxCmp').onclick = () => {
    image of the comorbid matrix. Every group has thousands of contributors
    (median 6,175 of 7,219 codes), so an unfiltered dump is unreadable: DCL 3-5
    is the rare, worth-hunting end (median 357 per group) and is the default. */
-const REV = { dc:null, levels:new Set([5,4,3]), filter:'', limit:300, PAGE:300 };
+const REV = { dc:null, levels:new Set([5,4,3]), filter:'', limit:300, PAGE:300,
+  sortBy:'avg', sortDir:-1, chapter:'ALL', scope:'all' };
 let REVROWS = [];                                   // last render, for export
+
+// classic ICD-10 chapters (I-XXI) as letter+2-digit ranges, for the "ทีละหมวด" filter
+// หมอ Gain ขอไว้ — U00-U99 (special purposes) ไม่มีรหัสในชุดข้อมูลนี้จึงไม่ใส่
+const chapterKey = c => c.toUpperCase().charCodeAt(0)*1000 + (parseInt(c.slice(1,3),10)||0);
+const CHAPTERS = [
+  ['A00','B99','โรคติดเชื้อและปรสิต'], ['C00','D48','เนื้องอก'],
+  ['D50','D89','โรคเลือด/ภูมิคุ้มกัน'], ['E00','E90','ต่อมไร้ท่อ/เมตาบอลิก'],
+  ['F00','F99','จิตเวช'], ['G00','G99','ระบบประสาท'],
+  ['H00','H59','ตา'], ['H60','H95','หู'],
+  ['I00','I99','ระบบไหลเวียนเลือด'], ['J00','J99','ระบบหายใจ'],
+  ['K00','K93','ระบบย่อยอาหาร'], ['L00','L99','ผิวหนัง'],
+  ['M00','M99','กล้ามเนื้อ/กระดูก'], ['N00','N99','ทางเดินปัสสาวะ'],
+  ['O00','O99','ตั้งครรภ์/คลอด'], ['P00','P96','ภาวะปริกำเนิด'],
+  ['Q00','Q99','ความผิดปกติแต่กำเนิด'], ['R00','R99','อาการ/ยังไม่วินิจฉัย'],
+  ['S00','T98','บาดเจ็บ/พิษ'], ['V01','Y98','สาเหตุภายนอก'],
+  ['Z00','Z99','ปัจจัยด้านสุขภาพ'],
+].map(([from,to,name]) => ({ key:`${from}_${to}`, label:`${from}-${to} ${name}`, lo:chapterKey(from), hi:chapterKey(to) }));
 
 function revHash(){ return 'rev' + (REV.dc ? '/' + REV.dc : ''); }
 
@@ -795,16 +819,9 @@ $('#rlevels').addEventListener('click', e => {
 });
 
 async function showRev(){
+  if(!REV.dc) return showRevSummary();
   const box = $('#revview');
-  $('#rctl').hidden = !REV.dc;
-  if(!REV.dc){
-    REVROWS = [];
-    $('#btnXlsxRev').textContent = 'Export รายการนี้ (.xlsx)';
-    $('#btnXlsxRev').disabled = true;
-    box.innerHTML = `<div class="card muted">ยังไม่ได้เลือก DRG group — พิมพ์รหัสกลุ่มหรือชื่อกลุ่มในช่องด้านบน `
-      + `(ลองกลุ่ม <a href="#rev/0155">0155</a> ตามตัวอย่าง)</div>`;
-    return;
-  }
+  $('#rctl').hidden = false;
   const t = await dclTable();
   const i = t.dcs.indexOf(REV.dc);
   const info = DRG.dc[REV.dc];
@@ -814,8 +831,8 @@ async function showRev(){
     $('#btnXlsxRev').disabled = true;
     box.innerHTML = `<div class="card"><h3 style="margin:0 0 6px">DRG group <code>${esc(REV.dc)}</code>
       <span class="muted">${esc(info?.name||'')}</span></h3>
-      <p class="muted" style="margin:0">${info ? 'ไม่มีรหัสโรคใดให้ค่า DCL กับกลุ่มนี้เลย — กลุ่มนี้จึงไม่มีข้อมูลโรคร่วมให้แสดง'
-        : 'ไม่พบ DRG group นี้'}</p></div>`;
+      <p class="muted" style="margin:0 0 8px">${info ? 'ไม่มีรหัสโรคใดให้ค่า DCL กับกลุ่มนี้เลย — กลุ่มนี้จึงไม่มีข้อมูลโรคร่วมให้แสดง'
+        : 'ไม่พบ DRG group นี้'}</p><a href="#rev">← กลับไปดูสรุปรวมทุกรหัส</a></div>`;
     return;
   }
   const all = [], cnt = [0,0,0,0,0,0];
@@ -848,7 +865,10 @@ async function showRev(){
       <div class="row" style="justify-content:space-between">
         <h3 style="margin:0">รหัสที่เพิ่ม DCL ให้กลุ่ม <code>${esc(REV.dc)}</code>
           <span class="muted">${esc(info?.name||'')}</span></h3>
-        <a href="#dc/${esc(REV.dc)}">ดูรายละเอียดกลุ่ม + PDx ของกลุ่มนี้ →</a>
+        <div class="row" style="gap:14px">
+          <a href="#rev">← กลับไปดูสรุปรวมทุกรหัส</a>
+          <a href="#dc/${esc(REV.dc)}">ดูรายละเอียดกลุ่ม + PDx ของกลุ่มนี้ →</a>
+        </div>
       </div>
       <p class="muted" style="margin:6px 0 10px">แสดง <b>${shown.length.toLocaleString()}</b> จาก
         ${rows.length.toLocaleString()} รหัสที่ตรงเงื่อนไข · ทั้งกลุ่มมี ${all.length.toLocaleString()} รหัส
@@ -868,12 +888,100 @@ async function showRev(){
   const allb = $('#btnRevAll'); if(allb) allb.onclick = () => { REV.limit = Infinity; showRev(); };
 }
 
+/* the mirror of the mirror: no single DC picked, so instead of one group's
+   codes, roll every code up into one avg/max DCL across every group it
+   touches (or a chosen scope) -- ranked and browsable instead of a 7000-row
+   dump. หมอ Gain's ask: "a099 : 2.37 / A090 : 2.48 / I10 : 1", sortable both
+   ways, with a chapter filter since even this list runs into the thousands. */
+async function showRevSummary(){
+  $('#rctl').hidden = false;
+  const box = $('#revview');
+  const t = await dclTable();
+  const idx = new Map(t.dcs.map((d,i)=>[d,i]));
+  const scopeDcs = REV.scope === 'preset' ? PRESET_DCS.filter(d => idx.has(d)) : t.dcs;
+  const scopeIdx = scopeDcs.map(d => idx.get(d));
+
+  const ch = CHAPTERS.find(c => c.key === REV.chapter);
+  let codes = Object.keys(t.codes);
+  if(ch) codes = codes.filter(c => { const k = chapterKey(c); return k >= ch.lo && k <= ch.hi; });
+  const fRaw = REV.filter.trim(), f = fRaw.toUpperCase(), fc = normCode(fRaw);
+  if(f) codes = codes.filter(c => c.includes(fc) || (descOf(c)||'').toUpperCase().includes(f));
+
+  let rows = codes.map(c => {
+    const s = t.codes[c];
+    const vals = scopeIdx.map(i => +s[i]).filter(v => v > 0);
+    return vals.length ? { c, max: Math.max(...vals), avg: vals.reduce((a,b)=>a+b,0)/vals.length, n: vals.length } : null;
+  }).filter(Boolean);
+  const dir = REV.sortDir;
+  if(REV.sortBy === 'code') rows.sort((a,b) => a.c.localeCompare(b.c)*dir);
+  else rows.sort((a,b) => (a.avg-b.avg)*dir || a.c.localeCompare(b.c));
+  REVROWS = rows;
+
+  $('#btnXlsxRev').textContent = `Export ${rows.length.toLocaleString()} รหัสที่กรองไว้ (.xlsx)`;
+  $('#btnXlsxRev').disabled = !rows.length;
+
+  $('#rlevels').innerHTML = `<span class="muted">เฉลี่ยจาก:</span>`
+    + `<button data-scope="all"${REV.scope!=='preset'?' class="primary"':''}>ทุกกลุ่ม (${t.dcs.length.toLocaleString()})</button>`
+    + `<button data-scope="preset"${REV.scope==='preset'?' class="primary"':''}>ชุดกลุ่มตัวอย่าง (${PRESET_DCS.length})</button>`
+    + `<select id="rChapter" style="margin-left:4px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink)">`
+    + `<option value="ALL"${REV.chapter==='ALL'?' selected':''}>ทุกหมวด ICD-10</option>`
+    + CHAPTERS.map(c => `<option value="${c.key}"${REV.chapter===c.key?' selected':''}>${esc(c.label)}</option>`).join('')
+    + `</select><span class="muted">· เฉลี่ยเฉพาะกลุ่มที่รหัสนั้นให้ DCL ≥ 1 (ไม่นับกลุ่มที่ให้ 0 ถ่วงลง)</span>`;
+
+  const arrow = k => REV.sortBy===k ? (REV.sortDir>0?' ▲':' ▼') : '';
+  const shown = rows.slice(0, REV.limit);
+  const body = shown.map(r => `<tr>
+      <td><a href="#code/${r.c}"><code>${esc(r.c)}</code></a></td>
+      <td class="icd">${esc(descOf(r.c))}</td>
+      <td>${r.avg.toFixed(2)}</td>
+      <td>${dclSpan(r.max)}</td>
+      <td>${r.n.toLocaleString()} / ${scopeDcs.length.toLocaleString()}</td>
+    </tr>`).join('');
+
+  box.innerHTML = `
+    <div class="card">
+      <h3 style="margin:0">สรุปเฉลี่ย DCL ต่อรหัส ICD-10 <span class="muted">(${rows.length.toLocaleString()} รหัส
+        ${ch ? ` · หมวด ${esc(ch.label)}` : ''}${f ? ` · กรอง "${esc(fRaw)}"` : ''})</span></h3>
+      <p class="muted" style="margin:6px 0 10px">แสดง <b>${shown.length.toLocaleString()}</b> จาก ${rows.length.toLocaleString()} รหัส
+        · คลิกหัวคอลัมน์ ICD-10 หรือ DCL เฉลี่ย เพื่อเรียงลำดับ · พิมพ์รหัสกลุ่ม DRG ด้านบนเพื่อดูรายละเอียดเฉพาะกลุ่มแทน</p>
+      ${rows.length ? `<div class="mxwrap"><table class="summarytable"><thead><tr>
+          <th data-s="code">ICD-10${arrow('code')}</th><th>คำอธิบาย</th>
+          <th data-s="avg">DCL เฉลี่ย${arrow('avg')}</th><th>DCL สูงสุด</th><th>กลุ่มที่ให้ DCL ≥ 1</th></tr></thead>
+          <tbody>${body}</tbody></table></div>`
+        : '<p class="muted">ไม่มีรหัสที่ตรงเงื่อนไข</p>'}
+      ${rows.length > shown.length
+        ? `<div class="row" style="margin-top:10px">
+            <button id="btnRevMore">แสดงเพิ่มอีก ${Math.min(REV.PAGE, rows.length-shown.length).toLocaleString()} รหัส</button>
+            <button id="btnRevAll">แสดงทั้งหมด ${rows.length.toLocaleString()} รหัส</button></div>`
+        : ''}
+    </div>`;
+  const more = $('#btnRevMore'); if(more) more.onclick = () => { REV.limit += REV.PAGE; showRevSummary(); };
+  const allb = $('#btnRevAll'); if(allb) allb.onclick = () => { REV.limit = Infinity; showRevSummary(); };
+  box.querySelectorAll('table.summarytable thead th[data-s]').forEach(th => th.addEventListener('click', () => {
+    const k = th.dataset.s;
+    if(REV.sortBy === k) REV.sortDir = -REV.sortDir;
+    else { REV.sortBy = k; REV.sortDir = (k === 'code') ? 1 : -1; }   // code reads A->Z first, values high->low first
+    REV.limit = REV.PAGE; showRevSummary();
+  }));
+  $('#rlevels').querySelectorAll('button[data-scope]').forEach(b => b.onclick = () => {
+    REV.scope = b.dataset.scope; REV.limit = REV.PAGE; showRevSummary();
+  });
+  const sel = $('#rChapter');
+  if(sel) sel.onchange = () => { REV.chapter = sel.value; REV.limit = REV.PAGE; showRevSummary(); };
+}
+
 $('#btnXlsxRev').onclick = () => {
-  if(!REV.dc || !REVROWS.length) return;
-  const name = DRG.dc[REV.dc]?.name || '';
-  const rows = [['DRG group','DC name','DCL','ICD-10','คำอธิบาย','เป็น PDx ของกลุ่ม']];
-  for(const [c,d] of REVROWS) rows.push([REV.dc, name, d, c, descOf(c), pdxText(BYCODE.get(c))]);
-  exportXlsx(`DRG_${REV.dc}_comorbid.xlsx`, rows);
+  if(!REVROWS.length) return;
+  if(REV.dc){
+    const name = DRG.dc[REV.dc]?.name || '';
+    const rows = [['DRG group','DC name','DCL','ICD-10','คำอธิบาย','เป็น PDx ของกลุ่ม']];
+    for(const [c,d] of REVROWS) rows.push([REV.dc, name, d, c, descOf(c), pdxText(BYCODE.get(c))]);
+    exportXlsx(`DRG_${REV.dc}_comorbid.xlsx`, rows);
+  } else {
+    const rows = [['ICD-10','คำอธิบาย','DCL เฉลี่ย','DCL สูงสุด','กลุ่มที่ให้ DCL>=1']];
+    for(const r of REVROWS) rows.push([r.c, descOf(r.c), +r.avg.toFixed(2), r.max, r.n]);
+    exportXlsx('ICD10_DCL_summary.xlsx', rows);
+  }
 };
 
 /* ---------- sheet builders ---------- */
