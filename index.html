@@ -928,7 +928,7 @@ async function showRevSummary(){
     + `<select id="rChapter" style="margin-left:4px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink)">`
     + `<option value="ALL"${REV.chapter==='ALL'?' selected':''}>ทุกหมวด ICD-10</option>`
     + CHAPTERS.map(c => `<option value="${c.key}"${REV.chapter===c.key?' selected':''}>${esc(c.label)}</option>`).join('')
-    + `</select><span class="muted">· "DCL เฉลี่ย(ค่า>0)" หารด้วยเฉพาะกลุ่มที่ให้ DCL ≥ 1 · "DCL เฉลี่ย (นับรวม&lt;0)" หารด้วยทุกกลุ่มในขอบเขต รวมกลุ่มที่ให้ DCL ≤ 0 ด้วย (ถ่วงลง)</span>`;
+    + `</select><span class="muted">· "DCL เฉลี่ย(ค่า>0)" หารด้วยเฉพาะกลุ่มที่ให้ DCL ≥ 1 · "DCL เฉลี่ย (นับรวม&lt;=0)" หารด้วยทุกกลุ่มในขอบเขต รวมกลุ่มที่ให้ DCL ≤ 0 ด้วย (ถ่วงลง)</span>`;
 
   const arrow = k => REV.sortBy===k ? (REV.sortDir>0?' ▲':' ▼') : '';
   const shown = rows.slice(0, REV.limit);
@@ -949,7 +949,7 @@ async function showRevSummary(){
         · คลิกหัวคอลัมน์ ICD-10 หรือ DCL เฉลี่ย(ค่า>0) เพื่อเรียงลำดับ · พิมพ์รหัสกลุ่ม DRG ด้านบนเพื่อดูรายละเอียดเฉพาะกลุ่มแทน</p>
       ${rows.length ? `<div class="mxwrap"><table class="summarytable"><thead><tr>
           <th data-s="code">ICD-10${arrow('code')}</th><th>คำอธิบาย</th>
-          <th data-s="avg">DCL เฉลี่ย(ค่า>0)${arrow('avg')}</th><th>DCL เฉลี่ย (นับรวม&lt;0)</th><th>DCL สูงสุด</th><th>กลุ่มที่ให้ DCL ≥ 1</th></tr></thead>
+          <th data-s="avg">DCL เฉลี่ย(ค่า>0)${arrow('avg')}</th><th>DCL เฉลี่ย (นับรวม&lt;=0)</th><th>DCL สูงสุด</th><th>กลุ่มที่ให้ DCL ≥ 1</th></tr></thead>
           <tbody>${body}</tbody></table></div>`
         : '<p class="muted">ไม่มีรหัสที่ตรงเงื่อนไข</p>'}
       ${rows.length > shown.length
@@ -981,7 +981,7 @@ $('#btnXlsxRev').onclick = () => {
     for(const [c,d] of REVROWS) rows.push([REV.dc, name, d, c, descOf(c), pdxText(BYCODE.get(c))]);
     exportXlsx(`DRG_${REV.dc}_comorbid.xlsx`, rows);
   } else {
-    const rows = [['ICD-10','คำอธิบาย','DCL เฉลี่ย(ค่า>0)','DCL เฉลี่ย (นับรวม<0)','DCL สูงสุด','กลุ่มที่ให้ DCL>=1']];
+    const rows = [['ICD-10','คำอธิบาย','DCL เฉลี่ย(ค่า>0)','DCL เฉลี่ย (นับรวม<=0)','DCL สูงสุด','กลุ่มที่ให้ DCL>=1']];
     for(const r of REVROWS) rows.push([r.c, descOf(r.c), +r.avg.toFixed(2), +r.avgAll.toFixed(2), r.max, r.n]);
     exportXlsx('ICD10_DCL_summary.xlsx', rows);
   }
