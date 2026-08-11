@@ -915,8 +915,15 @@ async function showRevSummary(){
     return { c, max: Math.max(...vals), avg: sum/vals.length, avgAll: sum/scopeDcs.length, n: vals.length };
   }).filter(Boolean);
   const dir = REV.sortDir;
-  if(REV.sortBy === 'code') rows.sort((a,b) => a.c.localeCompare(b.c)*dir);
-  else rows.sort((a,b) => (a.avg-b.avg)*dir || a.c.localeCompare(b.c));
+  const sortCmp = {
+    code: (a,b) => a.c.localeCompare(b.c),
+    desc: (a,b) => (descOf(a.c)||'').localeCompare(descOf(b.c)||''),
+    avg: (a,b) => a.avg-b.avg,
+    avgAll: (a,b) => a.avgAll-b.avgAll,
+    max: (a,b) => a.max-b.max,
+    n: (a,b) => a.n-b.n,
+  }[REV.sortBy] || ((a,b) => a.avg-b.avg);
+  rows.sort((a,b) => sortCmp(a,b)*dir || a.c.localeCompare(b.c));
   REVROWS = rows;
 
   $('#btnXlsxRev').textContent = `Export ${rows.length.toLocaleString()} รหัสที่กรองไว้ (.xlsx)`;
@@ -946,10 +953,11 @@ async function showRevSummary(){
       <h3 style="margin:0">สรุปเฉลี่ย DCL ต่อรหัส ICD-10 <span class="muted">(${rows.length.toLocaleString()} รหัส
         ${ch ? ` · หมวด ${esc(ch.label)}` : ''}${f ? ` · กรอง "${esc(fRaw)}"` : ''})</span></h3>
       <p class="muted" style="margin:6px 0 10px">แสดง <b>${shown.length.toLocaleString()}</b> จาก ${rows.length.toLocaleString()} รหัส
-        · คลิกหัวคอลัมน์ ICD-10 หรือ DCL เฉลี่ย(ค่า>0) เพื่อเรียงลำดับ · พิมพ์รหัสกลุ่ม DRG ด้านบนเพื่อดูรายละเอียดเฉพาะกลุ่มแทน</p>
+        · คลิกหัวคอลัมน์ใดก็ได้เพื่อเรียงลำดับ · พิมพ์รหัสกลุ่ม DRG ด้านบนเพื่อดูรายละเอียดเฉพาะกลุ่มแทน</p>
       ${rows.length ? `<div class="mxwrap"><table class="summarytable"><thead><tr>
-          <th data-s="code">ICD-10${arrow('code')}</th><th>คำอธิบาย</th>
-          <th data-s="avg">DCL เฉลี่ย(ค่า>0)${arrow('avg')}</th><th>DCL เฉลี่ย (นับรวม&lt;=0)</th><th>DCL สูงสุด</th><th>กลุ่มที่ให้ DCL ≥ 1</th></tr></thead>
+          <th data-s="code">ICD-10${arrow('code')}</th><th data-s="desc">คำอธิบาย${arrow('desc')}</th>
+          <th data-s="avg">DCL เฉลี่ย(ค่า>0)${arrow('avg')}</th><th data-s="avgAll">DCL เฉลี่ย (นับรวม&lt;=0)${arrow('avgAll')}</th>
+          <th data-s="max">DCL สูงสุด${arrow('max')}</th><th data-s="n">กลุ่มที่ให้ DCL ≥ 1${arrow('n')}</th></tr></thead>
           <tbody>${body}</tbody></table></div>`
         : '<p class="muted">ไม่มีรหัสที่ตรงเงื่อนไข</p>'}
       ${rows.length > shown.length
@@ -963,7 +971,7 @@ async function showRevSummary(){
   box.querySelectorAll('table.summarytable thead th[data-s]').forEach(th => th.addEventListener('click', () => {
     const k = th.dataset.s;
     if(REV.sortBy === k) REV.sortDir = -REV.sortDir;
-    else { REV.sortBy = k; REV.sortDir = (k === 'code') ? 1 : -1; }   // code reads A->Z first, values high->low first
+    else { REV.sortBy = k; REV.sortDir = (k === 'code' || k === 'desc') ? 1 : -1; }   // text reads A->Z first, numbers high->low first
     REV.limit = REV.PAGE; showRevSummary();
   }));
   $('#rlevels').querySelectorAll('button[data-scope]').forEach(b => b.onclick = () => {
